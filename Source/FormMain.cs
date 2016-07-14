@@ -21,6 +21,7 @@ namespace LogViewer
         private readonly SynchronizationContext synchronizationContext;
         private CancellationTokenSource cancellationTokenSource;
         private List<ushort> filterIds;
+        private bool processing;
         #endregion
 
         #region Constructor
@@ -66,17 +67,21 @@ namespace LogViewer
         /// <returns></returns>
         private void LoadFile(string filePath)
         {
+            this.processing = true;
+            this.hourGlass = new HourGlass(this);
+            SetProcessingState(false);
+            statusProgress.Visible = true;
+            this.cancellationTokenSource = new CancellationTokenSource();
+
             if (lf != null)
             {
-                listviewLines.ClearObjects();
+                listLines.ClearObjects();
                 lf.ProgressUpdate -= LogFile_LoadProgress;
                 lf.LoadComplete -= LogFile_LoadComplete;
                 lf.SearchComplete -= LogFile_SearchComplete;
                 lf.ExportComplete -= LogFile_ExportComplete;
                 lf.Dispose();
             }
-
-            cancellationTokenSource = new CancellationTokenSource();
 
             lf = new LogFile();
             lf.ProgressUpdate += LogFile_LoadProgress;
@@ -100,8 +105,11 @@ namespace LogViewer
             // Add the ID so that any matches show up straight away
             filterIds.Add(sc.Id);
 
-            cancellationTokenSource = new CancellationTokenSource();
-
+            this.processing = true;
+            this.hourGlass = new HourGlass(this);
+            SetProcessingState(false);
+            statusProgress.Visible = true;
+            this.cancellationTokenSource = new CancellationTokenSource();
             lf.Search(sc, toolButtonCumulative.Checked, cancellationTokenSource.Token);
         }
 
@@ -111,15 +119,19 @@ namespace LogViewer
         /// <param name="filePath"></param>
         private void Export(string filePath)
         {
-            cancellationTokenSource = new CancellationTokenSource();
+            this.processing = true;
+            this.hourGlass = new HourGlass(this);
+            SetProcessingState(false);
+            statusProgress.Visible = true;
+            this.cancellationTokenSource = new CancellationTokenSource();
 
-            if (listviewLines.ModelFilter == null)
+            if (listLines.ModelFilter == null)
             {
                 lf.Export(filePath, cancellationTokenSource.Token);
             }
             else
             {
-                lf.Export(listviewLines.FilteredObjects, filePath, cancellationTokenSource.Token);
+                lf.Export(listLines.FilteredObjects, filePath, cancellationTokenSource.Token);
             }            
         }
         #endregion
@@ -145,10 +157,11 @@ namespace LogViewer
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
                 statusProgress.Visible = false;
-                listviewLines.Refresh();
+                listLines.Refresh();
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
+                this.processing = false;
 
             }), null);
         }
@@ -165,6 +178,7 @@ namespace LogViewer
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
+                this.processing = false;
 
             }), null);
         }
@@ -176,7 +190,7 @@ namespace LogViewer
         {
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
-                listviewLines.SetObjects(lf.Lines);
+                listLines.SetObjects(lf.Lines);
 
                 using (var image = new Bitmap(1, 1))
                 {
@@ -192,6 +206,7 @@ namespace LogViewer
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
+                this.processing = false;
 
             }), null);           
         }
@@ -203,13 +218,58 @@ namespace LogViewer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void listviewLines_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
+        private void listLines_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
         {
             //if (((LogLine)e.Model).Match == true)
             if (((LogLine)e.Model).SearchMatches.Intersect(filterIds).Any() == true)
             {
                 e.Item.BackColor = Color.Red;
             }            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listLines_DragEnter(object sender, DragEventArgs e)
+        {
+            if (processing == true)
+            {
+                return;
+            }
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listLines_DragDrop(object sender, DragEventArgs e)
+        {
+            if (processing == true)
+            {
+                return;
+            }
+
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files.Length == 0)
+            {
+                return;
+            }
+
+            if (files.Length > 1)
+            {
+                UserInterface.DisplayMessageBox(this, "Only one file can be processed at one time", MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            LoadFile(files[0]);
         }
         #endregion
 
@@ -221,7 +281,7 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuFilterClear_Click(object sender, EventArgs e)
         {
-            this.listviewLines.ModelFilter = null;
+            this.listLines.ModelFilter = null;
         }
 
         /// <summary>
@@ -231,7 +291,7 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuFilterShowMatched_Click(object sender, EventArgs e)
         {
-            this.listviewLines.ModelFilter = new ModelFilter(delegate (object x) {
+            this.listLines.ModelFilter = new ModelFilter(delegate (object x) {
                 return x != null && (((LogLine)x).SearchMatches.Intersect(filterIds).Any() == true);
             });
         }
@@ -243,7 +303,7 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuFilterHideMatched_Click(object sender, EventArgs e)
         {
-            this.listviewLines.ModelFilter = new ModelFilter(delegate (object x) {
+            this.listLines.ModelFilter = new ModelFilter(delegate (object x) {
                 return x != null && (((LogLine)x).SearchMatches.Intersect(filterIds).Any() == false);
             });
         }
@@ -276,7 +336,7 @@ namespace LogViewer
                     filterIds.Add(sc.Id);
                 }
 
-                listviewLines.Refresh();
+                listLines.Refresh();
             }
         }
 
@@ -296,10 +356,7 @@ namespace LogViewer
             {
                 return;
             }
-
-            hourGlass = new HourGlass(this);
-            SetProcessingState(false);
-            statusProgress.Visible = true;
+            
             Export(sfd.FileName);
         }
         #endregion
@@ -326,9 +383,6 @@ namespace LogViewer
                 return;
             }
 
-            hourGlass = new HourGlass(this);
-            SetProcessingState(false);
-            statusProgress.Visible = true;
             SearchFile();
         }
         #endregion
@@ -351,9 +405,6 @@ namespace LogViewer
                 return;
             }
 
-            hourGlass = new HourGlass(this);
-            SetProcessingState(false);
-            statusProgress.Visible = true;
             LoadFile(openFileDialog.FileName);
         }
 

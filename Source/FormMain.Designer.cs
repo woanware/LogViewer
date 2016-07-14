@@ -52,7 +52,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolButtonSearch = new System.Windows.Forms.ToolStripButton();
             this.panelMain = new System.Windows.Forms.Panel();
-            this.listviewLines = new BrightIdeasSoftware.FastObjectListView();
+            this.listLines = new BrightIdeasSoftware.FastObjectListView();
             this.olvcLineNumber = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvcText = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -69,7 +69,7 @@
             this.statusStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.panelMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.listviewLines)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.listLines)).BeginInit();
             this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -250,41 +250,44 @@
             // 
             // panelMain
             // 
-            this.panelMain.Controls.Add(this.listviewLines);
+            this.panelMain.Controls.Add(this.listLines);
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(0, 66);
             this.panelMain.Name = "panelMain";
             this.panelMain.Size = new System.Drawing.Size(1346, 436);
             this.panelMain.TabIndex = 5;
             // 
-            // listviewLines
+            // listLines
             // 
-            this.listviewLines.Alignment = System.Windows.Forms.ListViewAlignment.Left;
-            this.listviewLines.AllColumns.Add(this.olvcLineNumber);
-            this.listviewLines.AllColumns.Add(this.olvcText);
-            this.listviewLines.CellEditUseWholeCell = false;
-            this.listviewLines.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.listLines.Alignment = System.Windows.Forms.ListViewAlignment.Left;
+            this.listLines.AllColumns.Add(this.olvcLineNumber);
+            this.listLines.AllColumns.Add(this.olvcText);
+            this.listLines.AllowDrop = true;
+            this.listLines.CellEditUseWholeCell = false;
+            this.listLines.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvcLineNumber,
             this.olvcText});
-            this.listviewLines.ContextMenuStrip = this.contextMenu;
-            this.listviewLines.Cursor = System.Windows.Forms.Cursors.Default;
-            this.listviewLines.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listviewLines.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listviewLines.FullRowSelect = true;
-            this.listviewLines.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.listviewLines.HideSelection = false;
-            this.listviewLines.Location = new System.Drawing.Point(0, 0);
-            this.listviewLines.Name = "listviewLines";
-            this.listviewLines.OwnerDraw = false;
-            this.listviewLines.ShowGroups = false;
-            this.listviewLines.Size = new System.Drawing.Size(1346, 436);
-            this.listviewLines.TabIndex = 0;
-            this.listviewLines.UseCompatibleStateImageBehavior = false;
-            this.listviewLines.UseFiltering = true;
-            this.listviewLines.UseHotControls = false;
-            this.listviewLines.View = System.Windows.Forms.View.Details;
-            this.listviewLines.VirtualMode = true;
-            this.listviewLines.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.listviewLines_FormatRow);
+            this.listLines.ContextMenuStrip = this.contextMenu;
+            this.listLines.Cursor = System.Windows.Forms.Cursors.Default;
+            this.listLines.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listLines.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listLines.FullRowSelect = true;
+            this.listLines.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.listLines.HideSelection = false;
+            this.listLines.Location = new System.Drawing.Point(0, 0);
+            this.listLines.Name = "listLines";
+            this.listLines.OwnerDraw = false;
+            this.listLines.ShowGroups = false;
+            this.listLines.Size = new System.Drawing.Size(1346, 436);
+            this.listLines.TabIndex = 0;
+            this.listLines.UseCompatibleStateImageBehavior = false;
+            this.listLines.UseFiltering = true;
+            this.listLines.UseHotControls = false;
+            this.listLines.View = System.Windows.Forms.View.Details;
+            this.listLines.VirtualMode = true;
+            this.listLines.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.listLines_FormatRow);
+            this.listLines.DragDrop += new System.Windows.Forms.DragEventHandler(this.listLines_DragDrop);
+            this.listLines.DragEnter += new System.Windows.Forms.DragEventHandler(this.listLines_DragEnter);
             // 
             // olvcLineNumber
             // 
@@ -393,7 +396,7 @@
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();
             this.panelMain.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.listviewLines)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.listLines)).EndInit();
             this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -410,7 +413,7 @@
         private System.Windows.Forms.ToolStripTextBox textSearch;
         private System.Windows.Forms.ToolStripButton toolButtonSearch;
         private System.Windows.Forms.Panel panelMain;
-        private BrightIdeasSoftware.FastObjectListView listviewLines;
+        private BrightIdeasSoftware.FastObjectListView listLines;
         private BrightIdeasSoftware.OLVColumn olvcLineNumber;
         private BrightIdeasSoftware.OLVColumn olvcText;
         private System.Windows.Forms.ToolStripMenuItem menuHelp;
