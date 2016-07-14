@@ -42,6 +42,7 @@ namespace LogViewer
         {
         }
 
+        #region Public Methods
         /// <summary>
         /// 
         /// </summary>
@@ -59,22 +60,33 @@ namespace LogViewer
                     this.fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
                     FileInfo fileInfo = new FileInfo(filePath);
 
-                    long offset = 0;
-                    bool lastSection = false;
-                    int counter = 0;
+                    // Calcs and finally point the position to the end of the line
                     long position = 0;
+                    // Holds the offset to the start of the next line
+                    long lineStartOffset = 0; 
+                    // Checks if we have read less than requested e.g. buffer not filled/end of file
+                    bool lastSection = false;
+                    // Counter for process reporting
+                    int counter = 0; 
+                    // Holds a counter to start checking for the next indexOf('\r')
                     int startIndex = 0;
-                    int bufferRemainder = 0;
+                    // Once all of the \r (lines) have been emnumerated, there might still be data left in the
+                    // buffer, so this holds the number of bytes that need to be added onto the next line
+                    int bufferRemainder = 0; 
+                    // Holds how many bytes were read from the last file stream read
                     int numBytesRead = 0;
-                    string tempStr = "";
+                    // Holds the temporary string generated from the file stream buffer
+                    string tempStr = string.Empty;
+                    // Length of the current line
                     int charCount;
-                    long lineEnd;
+                    // Return value from IndexOf function
                     int indexOf;
                     
                     while (position < this.fileStream.Length)
                     {
                         numBytesRead = this.fileStream.Read(tempBuffer, 0, 1024 * 1024);
                         if (numBytesRead < 1048576)
+
                         {
                             lastSection = true;
                         }
@@ -90,42 +102,47 @@ namespace LogViewer
                                 if (indexOf != -1)
                                 {
                                     charCount = 0;
-                                    lineEnd = 0;
 
-                                    // Check if the line contains a CR as well
+                                    // Check if the line contains a CR as well, if it does then we remove the last char as the char count
                                     if (indexOf != 0 && (int)tempBuffer[Math.Max(0, indexOf - 1)] == 13)
                                     {
-                                        charCount = bufferRemainder + (indexOf - startIndex - 1);
-                                        lineEnd = position + 2L;
+                                        charCount = bufferRemainder + (indexOf - startIndex - 1);                           
+                                        position += (long)charCount + 2L; 
                                     }
                                     else
                                     {
                                         charCount = bufferRemainder + (indexOf - startIndex);
-                                        lineEnd = position + 1L;
+                                        position += (long)charCount + 1L;
                                     }
 
+                                    AddLine(lineStartOffset, charCount);
 
-                                    AddLine(offset, charCount);
-
-                                    position = lineEnd + (long)charCount;
+                                    // The remaining number in the buffer gets set to 0 e.g. after 
+                                    //the first iteration as it would add onto the first line
                                     bufferRemainder = 0;
-                                    offset = position;
+
+                                    // Set the offset to the end of the last line that has just been added
+                                    lineStartOffset = position;
                                     startIndex = indexOf + 1;
                                 }
                             }
 
+                            // We had some '\r' in the last buffer read, now they are processing, so just add the rest as the last line
                             if (lastSection == true)
                             {
-                                AddLine(offset, bufferRemainder + (numBytesRead - startIndex));
+                                AddLine(lineStartOffset, bufferRemainder + (numBytesRead - startIndex));
+                                return;
                             }
                             
                             bufferRemainder += numBytesRead - startIndex;
                         }
                         else
                         {
+                            // The entire content of the buffer doesn't contain \r so just add the rest of content as the last line
                             if (lastSection == true)
                             {
-                                AddLine(offset, bufferRemainder + (numBytesRead - startIndex));
+                                AddLine(lineStartOffset, bufferRemainder + (numBytesRead - startIndex));
+                                return;
                             }
      
                             bufferRemainder += numBytesRead;
@@ -141,7 +158,7 @@ namespace LogViewer
                                 return;
                             }
                         }                       
-                    }
+                    } // WHILE
                 }
                 finally
                 {
@@ -170,7 +187,7 @@ namespace LogViewer
             Task.Run(() => {
 
                 long counter = 0;
-                string line = "";
+                string line = string.Empty;
                 bool located = false;
 
                 foreach (LogLine ll in this.Lines)
@@ -258,12 +275,14 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="lines"></param>
         /// <param name="filePath"></param>
         /// <param name="ct"></param>
         public void Export(IEnumerable lines, string filePath, CancellationToken ct)
         {
             this.ExportToFile(lines, filePath, ct);
         }
+        #endregion
 
         /// <summary>
         /// 
@@ -276,19 +295,17 @@ namespace LogViewer
             {
                 using (FileStream fs = new FileStream(filePath, FileMode.Create))
                 {
-                    string line2 = string.Empty;
-                    byte[] line;
-                    byte[] endLine = new byte[2];
-                    endLine[0] = 13;
-                    endLine[1] = 10;
+                    string lineStr = string.Empty;
+                    byte[] lineBytes;
+                    byte[] endLine = new byte[2] { 13, 10 };
 
                     long counter = 0;
                     foreach (LogLine ll in lines)
                     {
-                        line2 = this.GetLine(ll.LineNumber);
-                        //line = this.GetLineBytes(ll.LineNumber);
-                        line = Encoding.ASCII.GetBytes(line2);
-                        fs.Write(line, 0, line.Length);
+                        lineStr = this.GetLine(ll.LineNumber);
+                        lineBytes = Encoding.ASCII.GetBytes(lineStr);
+                        fs.Write(lineBytes, 0, lineBytes.Length);
+                        // Add \r\n
                         fs.Write(endLine, 0, 2);
 
                         if (counter++ % 50 == 0)
@@ -320,8 +337,6 @@ namespace LogViewer
             LogLine ll = new LogLine();
             ll.Offset = offset;
             ll.CharCount = charCount;
-            //  ll.FirstNonWhiteSpace = this.firstNonWhitespace(stringBuilder.ToString());
-            //  ll.LastNonWhiteSpace = this.lastNonWhitespace(stringBuilder.ToString());
             ll.LineNumber = this.LineCount;
             this.Lines.Add(ll);
             if (charCount > this.LongestLine.CharCount)
@@ -331,28 +346,6 @@ namespace LogViewer
             }
 
             this.LineCount++;
-        }
-
-        private int firstNonWhitespace(string s)
-        {
-            if (s.Length == 0)
-                return 0;
-            int index = 0;
-            while (index < s.Length && ((int)s[index] == 32 || (int)s[index] == 9))
-                ++index;
-            if (index == s.Length)
-                return 0;
-            return index;
-        }
-
-        private int lastNonWhitespace(string s)
-        {
-            if (s.Length == 0)
-                return 0;
-            int index = s.Length - 1;
-            while (((int)s[index] == 32 || (int)s[index] == 9 || ((int)s[index] == 13 || (int)s[index] == 10)) && index > 0)
-                --index;
-            return index;
         }
 
         /// <summary>

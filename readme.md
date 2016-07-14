@@ -25,6 +25,7 @@ I tested the v0.0.1 release of LogViewer against v1.1.3 of Mandiant Highlighter.
 - Can disable/enable search terms that are cumulative and the results are displayed instantly
 - Export current view
 - Show/Hide matched lines
+- Four search modes (Sub String Case Insensitive, Sub String Case Sensitive, Regex Case Insensitive, Regex Case Sensitive)
 
 ## General
 
