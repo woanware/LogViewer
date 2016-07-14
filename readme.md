@@ -31,3 +31,7 @@ I tested the v0.0.1 release of LogViewer against v1.1.3 of Mandiant Highlighter.
 - To stop an action such as load, search, export, you double click on the progress bar, located in the status bar
 - The context menu holds the majority of actions
 - Lots of stuff to be fixed/added! :-)
+
+## Screenshot
+
+![](screenshot.png)
