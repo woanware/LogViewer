@@ -365,6 +365,22 @@ namespace LogViewer
             
             Export(sfd.FileName);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextMenuCopyLine_Click(object sender, EventArgs e)
+        {
+            LogLine ll = (LogLine)listLines.SelectedObject;
+            if (ll == null)
+            {
+                UserInterface.DisplayErrorMessageBox(this, "Unable to retrieve line");
+                return;
+            }
+            Clipboard.SetText(lf.GetLine(ll.LineNumber));
+        }
         #endregion
 
         #region Toolbar Event Handlers
