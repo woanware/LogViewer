@@ -15,15 +15,17 @@ namespace LogViewer
     internal class LogFile 
     {
         #region Delegates
+        public delegate void SearchCompleteEvent(long matches, bool cancelled);
+        public delegate void CompleteEvent(TimeSpan duration, bool cancelled);
         public delegate void BoolEvent(bool val);
         public delegate void DefaultEvent();
         public delegate void ProgressUpdateEvent(int percent);
         #endregion
 
         #region Events
-        public event BoolEvent SearchComplete;
-        public event BoolEvent LoadComplete;
-        public event BoolEvent ExportComplete;
+        public event SearchCompleteEvent SearchComplete;
+        public event CompleteEvent LoadComplete;
+        public event CompleteEvent ExportComplete;
         public event ProgressUpdateEvent ProgressUpdate;
         #endregion
 
@@ -52,9 +54,10 @@ namespace LogViewer
         {
             Task.Run(() => {
 
+                DateTime start = DateTime.Now;
                 bool cancelled = false;
                 try
-                {
+                {                    
                     byte[] tempBuffer = new byte[1024 * 1024];
 
                     this.fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
@@ -162,8 +165,10 @@ namespace LogViewer
                 }
                 finally
                 {
+                    DateTime end = DateTime.Now;
+
                     OnProgressUpdate(100);
-                    OnLoadComplete(cancelled);
+                    OnLoadComplete(end - start, cancelled);
                 }
             });
         }
@@ -187,6 +192,7 @@ namespace LogViewer
             Task.Run(() => {
 
                 long counter = 0;
+                long matches = 0;
                 string line = string.Empty;
                 bool located = false;
 
@@ -241,6 +247,7 @@ namespace LogViewer
                     }
                     else
                     {
+                        matches++;
                         ll.SearchMatches.Add(sc.Id);
                     }
                 
@@ -251,14 +258,14 @@ namespace LogViewer
                         if (ct.IsCancellationRequested)
                         {
                             OnProgressUpdate(100);
-                            OnSearchComplete(true);
+                            OnSearchComplete(matches, true);
                             return;
                         }
                     }
                 }
 
                 OnProgressUpdate(100);
-                OnSearchComplete(false);
+                OnSearchComplete(matches, false);
             });
         }
 
@@ -293,37 +300,46 @@ namespace LogViewer
         {
             Task.Run(() =>
             {
-                using (FileStream fs = new FileStream(filePath, FileMode.Create))
+                DateTime start = DateTime.Now;
+                bool cancelled = false;
+                try
                 {
-                    string lineStr = string.Empty;
-                    byte[] lineBytes;
-                    byte[] endLine = new byte[2] { 13, 10 };
-
-                    long counter = 0;
-                    foreach (LogLine ll in lines)
+                    using (FileStream fs = new FileStream(filePath, FileMode.Create))
                     {
-                        lineStr = this.GetLine(ll.LineNumber);
-                        lineBytes = Encoding.ASCII.GetBytes(lineStr);
-                        fs.Write(lineBytes, 0, lineBytes.Length);
-                        // Add \r\n
-                        fs.Write(endLine, 0, 2);
+                        string lineStr = string.Empty;
+                        byte[] lineBytes;
+                        byte[] endLine = new byte[2] { 13, 10 };
 
-                        if (counter++ % 50 == 0)
+                        long counter = 0;
+                        foreach (LogLine ll in lines)
                         {
-                            OnProgressUpdate((int)((double)counter / (double)Lines.Count * 100));
+                            lineStr = this.GetLine(ll.LineNumber);
+                            lineBytes = Encoding.ASCII.GetBytes(lineStr);
+                            fs.Write(lineBytes, 0, lineBytes.Length);
+                            // Add \r\n
+                            fs.Write(endLine, 0, 2);
 
-                            if (ct.IsCancellationRequested)
+                            if (counter++ % 50 == 0)
                             {
-                                OnProgressUpdate(100);
-                                OnSearchComplete(true);
-                                return;
+                                OnProgressUpdate((int)((double)counter / (double)Lines.Count * 100));
+
+                                if (ct.IsCancellationRequested)
+                                {
+                                    cancelled = true;
+                                    return;
+                                }
                             }
                         }
+
                     }
+                }
+                finally
+                {
+                    DateTime end = DateTime.Now;
 
                     OnProgressUpdate(100);
-                    OnSearchComplete(false);
-                }                    
+                    OnLoadComplete(end - start, cancelled);
+                }
             });
         }
 
@@ -357,7 +373,7 @@ namespace LogViewer
         {
             if (lineNumber >= this.Lines.Count)
             {
-                return "";
+                return string.Empty;
             }
 
             byte[] buffer = new byte[this.Lines[lineNumber].CharCount + 1];
@@ -414,24 +430,36 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        private void OnLoadComplete(bool cancelled)
+        private void OnLoadComplete(TimeSpan duration, bool cancelled)
         {
             var handler = LoadComplete;
             if (handler != null)
             {
-                handler(cancelled);
+                handler(duration, cancelled);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void OnSearchComplete(bool cancelled)
+        private void OnExportComplete(TimeSpan duration, bool cancelled)
+        {
+            var handler = ExportComplete;
+            if (handler != null)
+            {
+                handler(duration, cancelled);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void OnSearchComplete(long matches, bool cancelled)
         {
             var handler = SearchComplete;
             if (handler != null)
             {
-                handler(cancelled);
+                handler(matches, cancelled);
             }
         }
         #endregion

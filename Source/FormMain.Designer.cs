@@ -40,9 +40,10 @@
             this.menuHelpSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusProgress = new System.Windows.Forms.ToolStripProgressBar();
+            this.statusLabelMain = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusSep1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusLabelSearch = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolLabelSearch = new System.Windows.Forms.ToolStripLabel();
             this.textSearch = new System.Windows.Forms.ToolStripTextBox();
@@ -147,19 +148,15 @@
             // 
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statusLabel,
             this.statusProgress,
-            this.statusSep1});
+            this.statusLabelMain,
+            this.statusSep1,
+            this.statusLabelSearch});
             this.statusStrip.Location = new System.Drawing.Point(0, 502);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(1346, 22);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "statusStrip1";
-            // 
-            // statusLabel
-            // 
-            this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(0, 17);
             // 
             // statusProgress
             // 
@@ -168,12 +165,22 @@
             this.statusProgress.Visible = false;
             this.statusProgress.Click += new System.EventHandler(this.statusProgress_Click);
             // 
+            // statusLabelMain
+            // 
+            this.statusLabelMain.Name = "statusLabelMain";
+            this.statusLabelMain.Size = new System.Drawing.Size(0, 17);
+            // 
             // statusSep1
             // 
             this.statusSep1.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.statusSep1.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
             this.statusSep1.Name = "statusSep1";
             this.statusSep1.Size = new System.Drawing.Size(4, 17);
+            // 
+            // statusLabelSearch
+            // 
+            this.statusLabelSearch.Name = "statusLabelSearch";
+            this.statusLabelSearch.Size = new System.Drawing.Size(0, 17);
             // 
             // toolStrip
             // 
@@ -407,7 +414,7 @@
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem menuFile;
         private System.Windows.Forms.StatusStrip statusStrip;
-        private System.Windows.Forms.ToolStripStatusLabel statusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabelMain;
         private System.Windows.Forms.ToolStrip toolStrip;
         private System.Windows.Forms.ToolStripLabel toolLabelSearch;
         private System.Windows.Forms.ToolStripTextBox textSearch;
@@ -439,6 +446,7 @@
         private System.Windows.Forms.ToolStripMenuItem contextMenuSearches;
         private System.Windows.Forms.ToolStripSeparator contextMenuSep2;
         private System.Windows.Forms.ToolStripMenuItem contextMenuExport;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabelSearch;
     }
 }
 

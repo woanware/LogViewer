@@ -152,7 +152,7 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        private void LogFile_SearchComplete(bool cancelled)
+        private void LogFile_SearchComplete(long matches, bool cancelled)
         {
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
@@ -161,6 +161,7 @@ namespace LogViewer
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
+                UpdateStatusLabel("Matched " + matches + " lines (Search Terms: " + this.searches.Count + ")", statusLabelSearch);
                 this.processing = false;
 
             }), null);
@@ -170,7 +171,7 @@ namespace LogViewer
         /// 
         /// </summary>
         /// <param name="val"></param>
-        private void LogFile_ExportComplete(bool val)
+        private void LogFile_ExportComplete(TimeSpan duration, bool val)
         {
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
@@ -186,7 +187,7 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        private void LogFile_LoadComplete(bool cancelled)
+        private void LogFile_LoadComplete(TimeSpan duration, bool cancelled)
         {
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
@@ -206,6 +207,7 @@ namespace LogViewer
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
+                UpdateStatusLabel(lf.Lines.Count + " Lines", statusLabelMain);
                 this.processing = false;
 
             }), null);           
@@ -302,7 +304,7 @@ namespace LogViewer
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void contextMenuFilterHideMatched_Click(object sender, EventArgs e)
-        {
+        {           
             this.listLines.ModelFilter = new ModelFilter(delegate (object x) {
                 return x != null && (((LogLine)x).SearchMatches.Intersect(filterIds).Any() == false);
             });
@@ -465,6 +467,18 @@ namespace LogViewer
             {
                 methodInvoker.Invoke();
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enabled"></param>
+        private void UpdateStatusLabel(string text, ToolStripStatusLabel control)
+        {
+            synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
+                control.Text = (string)o;
+            }), text);
         }
         #endregion
 
