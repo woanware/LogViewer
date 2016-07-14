@@ -152,7 +152,7 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        private void LogFile_SearchComplete(long matches, bool cancelled)
+        private void LogFile_SearchComplete(TimeSpan duration, long matches, bool cancelled)
         {
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
@@ -161,7 +161,7 @@ namespace LogViewer
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
-                UpdateStatusLabel("Matched " + matches + " lines (Search Terms: " + this.searches.Count + ")", statusLabelSearch);
+                UpdateStatusLabel("Matched " + matches + " lines (Search Terms: " + this.searches.Count + ") # Duration: " + duration, statusLabelSearch);
                 this.processing = false;
 
             }), null);
@@ -179,6 +179,7 @@ namespace LogViewer
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
+                UpdateStatusLabel("Export complete # Duration: " + duration, statusLabelSearch);
                 this.processing = false;
 
             }), null);
@@ -193,6 +194,9 @@ namespace LogViewer
             {
                 listLines.SetObjects(lf.Lines);
 
+                // Try and measure the length of the longest line in pixels
+                // This is rough, and tends to be too short, but cannot find
+                // another method to make column wide enough :-)
                 using (var image = new Bitmap(1, 1))
                 {
                     using (var g = Graphics.FromImage(image))
@@ -207,7 +211,7 @@ namespace LogViewer
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
-                UpdateStatusLabel(lf.Lines.Count + " Lines", statusLabelMain);
+                UpdateStatusLabel(lf.Lines.Count + " Lines # Duration: " + duration, statusLabelMain);
                 this.processing = false;
 
             }), null);           
