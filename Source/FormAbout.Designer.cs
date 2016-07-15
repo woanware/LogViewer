@@ -47,7 +47,7 @@
             this.pictureBox2.Location = new System.Drawing.Point(0, 0);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(458, 117);
+            this.pictureBox2.Size = new System.Drawing.Size(458, 137);
             this.pictureBox2.TabIndex = 26;
             this.pictureBox2.TabStop = false;
             // 
@@ -101,7 +101,7 @@
             this.lblApp.AutoSize = true;
             this.lblApp.BackColor = System.Drawing.Color.White;
             this.lblApp.Font = new System.Drawing.Font("Verdana", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblApp.Location = new System.Drawing.Point(117, 41);
+            this.lblApp.Location = new System.Drawing.Point(117, 44);
             this.lblApp.Name = "lblApp";
             this.lblApp.Size = new System.Drawing.Size(234, 44);
             this.lblApp.TabIndex = 28;
@@ -111,10 +111,10 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(15, 11);
+            this.pictureBox1.Location = new System.Drawing.Point(0, 11);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(96, 96);
+            this.pictureBox1.Size = new System.Drawing.Size(111, 126);
             this.pictureBox1.TabIndex = 27;
             this.pictureBox1.TabStop = false;
             // 

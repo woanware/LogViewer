@@ -22,6 +22,7 @@ namespace LogViewer
         private CancellationTokenSource cancellationTokenSource;
         private List<ushort> filterIds;
         private bool processing;
+        private Color highlightColour = Color.Lime;
         #endregion
 
         #region Constructor
@@ -226,10 +227,9 @@ namespace LogViewer
         /// <param name="e"></param>
         private void listLines_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
         {
-            //if (((LogLine)e.Model).Match == true)
             if (((LogLine)e.Model).SearchMatches.Intersect(filterIds).Any() == true)
             {
-                e.Item.BackColor = Color.Red;
+                e.Item.BackColor = highlightColour;
             }            
         }
 
@@ -319,7 +319,7 @@ namespace LogViewer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void contextMenuSearches_Click(object sender, EventArgs e)
+        private void contextMenuSearchViewTerms_Click(object sender, EventArgs e)
         {
             using (FormSearches f = new FormSearches(this.searches))
             {
@@ -344,6 +344,25 @@ namespace LogViewer
 
                 listLines.Refresh();
             }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextMenuSearchColour_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            DialogResult dr = cd.ShowDialog(this);
+            if (dr == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            this.highlightColour = cd.Color;
+            listLines.Refresh();
         }
 
         /// <summary>
