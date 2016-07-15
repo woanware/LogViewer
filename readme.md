@@ -1,6 +1,8 @@
 # LogViewer
 
-LogViewer is designed to make working with log files quicker and easier, particularly for DFIR cases that involved log analysis. Whilst I use grep (well actually I use [sift](https://github.com/svent/sift) to extract data from logs, it is handy to be able to view log files, search for terms, hide lines whilst you get an idea what the log file contains, what actions are being performed.
+LogViewer is designed to work with any large text files, so that even very large files can be opened, viewed and searched.
+
+It's original use case is for DFIR cases that involve log analysis. Whilst I use grep (well actually I use [sift](https://github.com/svent/sift) to extract data from logs, it is handy to be able to view log files, search for terms, hide lines whilst you get an idea what the log file contains, what actions are being performed.
 
 I normally use a combination of various text editors, glogg, and the Mandiant Highlighter tool. The Mandiant Highlighter tool is great but hasn't been updated since 2011. It has lots of functionality, most of which I don't use. I wanted to implement my own log viewer and looked at the source code for Highlighter and realised it uses a custom owner drawn textbox, which is how it can work on large files.
 
