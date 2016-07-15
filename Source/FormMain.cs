@@ -416,7 +416,7 @@ namespace LogViewer
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "All Files|*.*";
             sfd.FileName = "*.*";
-            sfd.Title = "Select the export file";
+            sfd.Title = "Select export file";
 
             if (sfd.ShowDialog(this) == DialogResult.Cancel)
             {
@@ -436,7 +436,7 @@ namespace LogViewer
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "All Files|*.*";
             sfd.FileName = "*.*";
-            sfd.Title = "Select the export file";
+            sfd.Title = "Select export file";
 
             if (sfd.ShowDialog(this) == DialogResult.Cancel)
             {
@@ -545,7 +545,7 @@ namespace LogViewer
         /// <param name="e"></param>
         private void menuHelpHelp_Click(object sender, EventArgs e)
         {
-           // Misc.ShellExecuteFile(System.IO.Path.Combine(Misc.GetApplicationDirectory(), "Help.pdf"));
+            Misc.ShellExecuteFile(System.IO.Path.Combine(Misc.GetApplicationDirectory(), "help.pdf"));
         }
 
         /// <summary>

@@ -59,7 +59,7 @@
             this.listSearchTerms.Name = "listSearchTerms";
             this.listSearchTerms.OwnerDraw = false;
             this.listSearchTerms.ShowGroups = false;
-            this.listSearchTerms.Size = new System.Drawing.Size(529, 322);
+            this.listSearchTerms.Size = new System.Drawing.Size(550, 374);
             this.listSearchTerms.TabIndex = 0;
             this.listSearchTerms.UseCompatibleStateImageBehavior = false;
             this.listSearchTerms.View = System.Windows.Forms.View.Details;
@@ -80,7 +80,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(299, 340);
+            this.buttonOK.Location = new System.Drawing.Point(320, 392);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(120, 40);
             this.buttonOK.TabIndex = 1;
@@ -92,7 +92,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(425, 340);
+            this.buttonCancel.Location = new System.Drawing.Point(446, 392);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(120, 40);
             this.buttonCancel.TabIndex = 2;
@@ -106,13 +106,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(557, 392);
+            this.ClientSize = new System.Drawing.Size(578, 444);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.listSearchTerms);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(600, 500);
             this.Name = "FormSearches";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Search Terms";

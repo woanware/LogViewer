@@ -1,5 +1,9 @@
 # History
 
+# v0.0.4
+
+- Very minor tweaks
+
 # v0.0.3
 
 - Modified copy operation to allow multi line select
@@ -10,6 +14,7 @@
 - Compiled PDF versions of markdown documents
 - Included [Nett](https://github.com/paiden/Nett) library for [TOML](https://github.com/toml-lang/toml) support
 - Added configuration persistence of highlight colour and multi select limit, which uses TOML format
+- A few bug fixes
 
 # v0.0.2
 
