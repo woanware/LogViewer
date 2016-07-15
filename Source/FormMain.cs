@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Linq;
 using woanware;
 using System.Threading;
+using System.Text;
 
 namespace LogViewer
 {
@@ -23,6 +24,7 @@ namespace LogViewer
         private List<ushort> filterIds;
         private bool processing;
         private Color highlightColour = Color.Lime;
+        private Configuration config;
         #endregion
 
         #region Constructor
@@ -48,6 +50,15 @@ namespace LogViewer
         /// <param name="e"></param>
         private void FormMain_Load(object sender, EventArgs e)
         {
+            this.config = new Configuration();
+            string ret = this.config.Load();
+            if (ret.Length > 0)
+            {
+                UserInterface.DisplayErrorMessageBox(this, ret);
+            }
+
+            this.highlightColour = config.GetHighlightColour();
+
             this.olvcLineNumber.AspectGetter = delegate (object x)
             {
                 return (((LogLine)x).LineNumber + 1);
@@ -57,6 +68,21 @@ namespace LogViewer
             {
                 return (lf.GetLine(((LogLine)x).LineNumber));
             };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            config.HighlightColour = this.highlightColour.ToKnownColor().ToString();
+            string ret = config.Save();
+            if (ret.Length > 0)
+            {
+                UserInterface.DisplayErrorMessageBox(this, ret);
+            }
         }
         #endregion
 
@@ -134,6 +160,21 @@ namespace LogViewer
             {
                 lf.Export(listLines.FilteredObjects, filePath, cancellationTokenSource.Token);
             }            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filePath"></param>
+        private void ExportSelected(string filePath)
+        {
+            this.processing = true;
+            this.hourGlass = new HourGlass(this);
+            SetProcessingState(false);
+            statusProgress.Visible = true;
+            this.cancellationTokenSource = new CancellationTokenSource();
+
+            lf.Export(listLines.SelectedObjects, filePath, cancellationTokenSource.Token);
         }
         #endregion
 
@@ -370,7 +411,7 @@ namespace LogViewer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void contextMenuExport_Click(object sender, EventArgs e)
+        private void contextMenuExportAll_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "All Files|*.*";
@@ -381,7 +422,7 @@ namespace LogViewer
             {
                 return;
             }
-            
+
             Export(sfd.FileName);
         }
 
@@ -390,15 +431,53 @@ namespace LogViewer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void contextMenuCopyLine_Click(object sender, EventArgs e)
+        private void contextMenuExportSelected_Click(object sender, EventArgs e)
         {
-            LogLine ll = (LogLine)listLines.SelectedObject;
-            if (ll == null)
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "All Files|*.*";
+            sfd.FileName = "*.*";
+            sfd.Title = "Select the export file";
+
+            if (sfd.ShowDialog(this) == DialogResult.Cancel)
             {
-                UserInterface.DisplayErrorMessageBox(this, "Unable to retrieve line");
                 return;
             }
-            Clipboard.SetText(lf.GetLine(ll.LineNumber));
+
+            ExportSelected(sfd.FileName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextMenuCopy_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (LogLine ll in listLines.SelectedObjects)
+            {
+                sb.AppendLine(lf.GetLine(ll.LineNumber));
+            }
+
+            Clipboard.SetText(sb.ToString());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (listLines.SelectedObjects.Count > this.config.MultiSelectLimit)
+            {
+                contextMenuCopy.Enabled = false;
+                contextMenuExportSelected.Enabled = false;
+                return;
+            }
+
+            contextMenuCopy.Enabled = true;
+            contextMenuExportSelected.Enabled = true;
         }
         #endregion
 

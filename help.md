@@ -1,7 +1,6 @@
-# Help (LogViewer)
+# Help
 
 The following provides a brief help guide for the core operations within LogViewer.
-
 
 ## Opening a file
 
@@ -29,7 +28,7 @@ By using the **Cumulative** search facility, there can be multiple search terms.
 
 ### Highlight Colour
 
-The search match highlight colour can be modified via the list context menu (Search->Colour). Currently this is not persisted.
+The search match highlight colour can be modified via the list context menu (Search->Colour). The colour is persisted to the configuration file
 
 ## Filtering
 
@@ -40,10 +39,10 @@ There are two modes for filtering; hide matched and show matched. Filtering and 
 
 ## Export
 
-The export functionality exports the current view, so any lines currently visible will be exported. This functionality is accessed via the list content menu.
+The export functionality exports all lines within the current view or the selected lines. There is a maximum limit of 10000 lines. This functionality is accessed via the list content menu.
 
 ## Copy Line
 
-The selected line's contents can be copied to the clipboard via the list context menu.
+The selected line's contents can be copied to the clipboard via the list context menu. There is a maximum limit of 10000 lines
 
 

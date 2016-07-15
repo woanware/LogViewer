@@ -272,7 +272,7 @@ namespace LogViewer
                     DateTime end = DateTime.Now;
 
                     OnProgressUpdate(100);
-                    OnSearchComplete(end - start, matches, false);
+                    OnSearchComplete(end - start, matches, cancelled);
                 }
             });
         }
@@ -346,7 +346,7 @@ namespace LogViewer
                     DateTime end = DateTime.Now;
 
                     OnProgressUpdate(100);
-                    OnLoadComplete(end - start, cancelled);
+                    OnExportComplete(end - start, cancelled);
                 }
             });
         }
