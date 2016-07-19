@@ -15,7 +15,7 @@ namespace LogViewer
     internal class LogFile 
     {
         #region Delegates
-        public delegate void SearchCompleteEvent(TimeSpan duration, long matches, bool cancelled);
+        public delegate void SearchCompleteEvent(TimeSpan duration, long matches, int numSearchTerms, bool cancelled);
         public delegate void CompleteEvent(TimeSpan duration, bool cancelled);
         public delegate void BoolEvent(bool val);
         public delegate void DefaultEvent();
@@ -187,6 +187,101 @@ namespace LogViewer
         /// </summary>
         /// <param name="searchText"></param>
         /// <param name="searchType"></param>
+        public void SearchMulti(List<SearchCriteria> scs, CancellationToken ct)
+        {
+            Task.Run(() => {
+
+                DateTime start = DateTime.Now;
+                bool cancelled = false;
+                long matches = 0;
+                try
+                {
+                    long counter = 0;
+                    string line = string.Empty;
+                    bool located = false;
+
+                    foreach (LogLine ll in this.Lines)
+                    {
+                        // Reset the match flag
+                        ll.SearchMatches.Clear();
+
+                        foreach (SearchCriteria sc in scs)
+                        {
+                            line = this.GetLine(ll.LineNumber);
+
+                            located = false;
+                            switch (sc.Type)
+                            {
+                                case Global.SearchType.SubStringCaseInsensitive:
+                                    if (line.IndexOf(sc.Pattern, 0, StringComparison.OrdinalIgnoreCase) > -1)
+                                    {
+                                        located = true;
+                                    }
+                                    break;
+
+                                case Global.SearchType.SubStringCaseSensitive:
+                                    if (line.IndexOf(sc.Pattern, 0, StringComparison.Ordinal) > -1)
+                                    {
+                                        located = true;
+                                    }
+                                    break;
+
+                                case Global.SearchType.RegexCaseInsensitive:
+                                    if (Regex.Match(line, sc.Pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled) != Match.Empty)
+                                    {
+                                        located = true;
+                                    }
+                                    break;
+
+                                case Global.SearchType.RegexCaseSensitive:
+                                    if (Regex.Match(line, sc.Pattern, RegexOptions.Compiled) != Match.Empty)
+                                    {
+                                        located = true;
+                                    }
+                                    break;
+
+                                default:
+                                    break;
+                            }
+
+                            if (located == false)
+                            {
+                                ll.SearchMatches.Remove(sc.Id);
+                            }
+                            else
+                            {
+                                matches++;
+                                ll.SearchMatches.Add(sc.Id);
+                            }
+                        }
+
+                        if (counter++ % 50 == 0)
+                        {
+                            OnProgressUpdate((int)((double)counter / (double)this.Lines.Count * 100));
+
+                            if (ct.IsCancellationRequested)
+                            {
+                                cancelled = true;
+                                return;
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    DateTime end = DateTime.Now;
+
+                    OnProgressUpdate(100);
+                    OnSearchComplete(end - start, matches, scs.Count, cancelled);
+                }
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <param name="searchType"></param>
         public void Search(SearchCriteria sc, bool cumulative, CancellationToken ct)
         {
             Task.Run(() => {
@@ -196,7 +291,7 @@ namespace LogViewer
                 long matches = 0;
                 try
                 {
-                    long counter = 0;                
+                    long counter = 0;
                     string line = string.Empty;
                     bool located = false;
 
@@ -227,11 +322,11 @@ namespace LogViewer
                                 }
                                 break;
 
-                            case Global.SearchType.RegexCaseInsensitive:   
+                            case Global.SearchType.RegexCaseInsensitive:
                                 if (Regex.Match(line, sc.Pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled) != Match.Empty)
                                 {
                                     located = true;
-                                }                            
+                                }
                                 break;
 
                             case Global.SearchType.RegexCaseSensitive:
@@ -254,16 +349,16 @@ namespace LogViewer
                             matches++;
                             ll.SearchMatches.Add(sc.Id);
                         }
-                
-                        if (counter++ % 50 == 0)
-                        {
-                            OnProgressUpdate((int)((double)counter / (double)this.Lines.Count * 100));
+                    }
 
-                            if (ct.IsCancellationRequested)
-                            {
-                                cancelled = true;
-                                return;
-                            }
+                    if (counter++ % 50 == 0)
+                    {
+                        OnProgressUpdate((int)((double)counter / (double)this.Lines.Count * 100));
+
+                        if (ct.IsCancellationRequested)
+                        {
+                            cancelled = true;
+                            return;
                         }
                     }
                 }
@@ -272,7 +367,7 @@ namespace LogViewer
                     DateTime end = DateTime.Now;
 
                     OnProgressUpdate(100);
-                    OnSearchComplete(end - start, matches, cancelled);
+                    OnSearchComplete(end - start, matches, 1, cancelled);
                 }
             });
         }
@@ -462,12 +557,12 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        private void OnSearchComplete(TimeSpan duration, long matches, bool cancelled)
+        private void OnSearchComplete(TimeSpan duration, long matches, int numTerms, bool cancelled)
         {
             var handler = SearchComplete;
             if (handler != null)
             {
-                handler(duration, matches, cancelled);
+                handler(duration, matches, numTerms, cancelled);
             }
         }
         #endregion

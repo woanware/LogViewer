@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace LogViewer
 {
@@ -32,7 +33,60 @@ namespace LogViewer
                 Reset();
             }
 
+            if (sc.Type == Global.SearchType.RegexCaseInsensitive || sc.Type == Global.SearchType.SubStringCaseInsensitive)
+            {
+                var ret = this.Items.SingleOrDefault(x => x.Pattern.ToLower() == sc.Pattern.ToLower());
+                if (ret != null)
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                var ret = this.Items.SingleOrDefault(x => x.Pattern == sc.Pattern);
+                if (ret != null)
+                {
+                    return 0;
+                }
+            }
+
             counter++;
+            sc.Enabled = true;
+            sc.Id = counter;
+            this.Items.Add(sc);
+
+            return sc.Id;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sc"></param>
+        /// <returns>The Id of the search criteria object</returns>
+        public ushort Add(SearchCriteria sc)
+        {
+            // If the SearchCriteria already exists then just enable it
+            if (sc.Type == Global.SearchType.RegexCaseInsensitive || sc.Type == Global.SearchType.SubStringCaseInsensitive)
+            {
+                var ret = this.Items.SingleOrDefault(x => x.Pattern.ToLower() == sc.Pattern.ToLower());
+                if (ret != null)
+                {
+                    ret.Enabled = true;
+                    return 0;
+                }
+            }
+            else
+            {
+                var ret = this.Items.SingleOrDefault(x => x.Pattern == sc.Pattern);
+                if (ret != null)
+                {
+                    ret.Enabled = true;
+                    return 0;
+                }
+            }
+
+            counter++;
+            sc.Enabled = true;
             sc.Id = counter;
             this.Items.Add(sc);
 
@@ -43,8 +97,9 @@ namespace LogViewer
         /// 
         /// </summary>
         /// <returns></returns>
-        private void Reset()
+        public void Reset()
         {
+            counter = 0;
             this.Items = new List<SearchCriteria>();
         }
 

@@ -35,6 +35,8 @@
             this.menuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.menuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuFileExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuTools = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsMultiStringSearch = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelpHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelpSep1 = new System.Windows.Forms.ToolStripSeparator();
@@ -85,6 +87,7 @@
             this.menuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuFile,
+            this.menuTools,
             this.menuHelp});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
@@ -120,6 +123,21 @@
             this.menuFileExit.Size = new System.Drawing.Size(141, 30);
             this.menuFileExit.Text = "&Exit";
             this.menuFileExit.Click += new System.EventHandler(this.menuFileExit_Click);
+            // 
+            // menuTools
+            // 
+            this.menuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuToolsMultiStringSearch});
+            this.menuTools.Name = "menuTools";
+            this.menuTools.Size = new System.Drawing.Size(65, 29);
+            this.menuTools.Text = "Tools";
+            // 
+            // menuToolsMultiStringSearch
+            // 
+            this.menuToolsMultiStringSearch.Name = "menuToolsMultiStringSearch";
+            this.menuToolsMultiStringSearch.Size = new System.Drawing.Size(247, 30);
+            this.menuToolsMultiStringSearch.Text = "Multi-String Search";
+            this.menuToolsMultiStringSearch.Click += new System.EventHandler(this.menuToolsMultiStringSearch_Click);
             // 
             // menuHelp
             // 
@@ -507,6 +525,8 @@
         private System.Windows.Forms.ToolStripMenuItem contextMenuSearchColour;
         private System.Windows.Forms.ToolStripMenuItem contextMenuExportAll;
         private System.Windows.Forms.ToolStripMenuItem contextMenuExportSelected;
+        private System.Windows.Forms.ToolStripMenuItem menuTools;
+        private System.Windows.Forms.ToolStripMenuItem menuToolsMultiStringSearch;
     }
 }
 

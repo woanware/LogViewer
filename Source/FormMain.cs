@@ -129,6 +129,12 @@ namespace LogViewer
             sc.Pattern = textSearch.Text;
             sc.Id = searches.Add(sc, toolButtonCumulative.Checked);
 
+            if (sc.Id == 0)
+            {
+                UserInterface.DisplayMessageBox(this, "The search pattern already exists", MessageBoxIcon.Exclamation);
+                return;
+            }
+
             // Add the ID so that any matches show up straight away
             filterIds.Add(sc.Id);
 
@@ -194,7 +200,7 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        private void LogFile_SearchComplete(TimeSpan duration, long matches, bool cancelled)
+        private void LogFile_SearchComplete(TimeSpan duration, long matches, int numTerms, bool cancelled)
         {
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
@@ -203,7 +209,7 @@ namespace LogViewer
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
-                UpdateStatusLabel("Matched " + matches + " lines (Search Terms: " + this.searches.Count + ") # Duration: " + duration, statusLabelSearch);
+                UpdateStatusLabel("Matched " + matches + " lines (Search Terms: " + numTerms + ") # Duration: " + duration, statusLabelSearch);
                 this.processing = false;
 
             }), null);
@@ -496,13 +502,6 @@ namespace LogViewer
                 return;
             }
 
-            SearchCriteria sc = this.searches.Items.SingleOrDefault(x => x.Pattern == textSearch.Text);
-            if (sc != null)
-            {
-                UserInterface.DisplayMessageBox(this, "The search pattern already exists", MessageBoxIcon.Exclamation);
-                return;
-            }
-
             SearchFile();
         }
         #endregion
@@ -518,7 +517,7 @@ namespace LogViewer
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "All Files|*.*";
             openFileDialog.FileName = "*.*";
-            openFileDialog.Title = "Select the log file";
+            openFileDialog.Title = "Select log file";
 
             if (openFileDialog.ShowDialog(this) == System.Windows.Forms.DialogResult.Cancel)
             {
@@ -555,9 +554,43 @@ namespace LogViewer
         /// <param name="e"></param>
         private void menuHelpAbout_Click(object sender, EventArgs e)
         {
-            using (FormAbout formAbout = new FormAbout())
+            using (FormAbout f = new FormAbout())
             {
-                formAbout.ShowDialog(this);
+                f.ShowDialog(this);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void menuToolsMultiStringSearch_Click(object sender, EventArgs e)
+        {
+            using (FormSearch f = new FormSearch(this.searches))
+            {
+                DialogResult dr = f.ShowDialog(this);
+                if (dr == DialogResult.Cancel)
+                {
+                    return;
+                }
+
+                // Clear any existing filter ID's as we will only show the multi-string search
+                filterIds.Clear();
+                this.searches.Reset();
+                foreach (SearchCriteria sc in f.NewSearches)
+                {                    
+                    // Add the ID so that any matches show up straight away
+                    filterIds.Add(sc.Id);
+                    this.searches.Add(sc);
+                }                
+
+                this.processing = true;
+                this.hourGlass = new HourGlass(this);
+                SetProcessingState(false);
+                statusProgress.Visible = true;
+                this.cancellationTokenSource = new CancellationTokenSource();
+                lf.SearchMulti(f.NewSearches, cancellationTokenSource.Token);
             }
         }
         #endregion
