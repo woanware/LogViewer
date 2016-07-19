@@ -2,6 +2,7 @@
 
 # v0.0.4
 
+- Added multi-string search
 - Very minor tweaks
 
 # v0.0.3

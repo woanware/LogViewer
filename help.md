@@ -32,7 +32,7 @@ To search for multiple strings in one search, use the Tools->Multi-String Search
 
 ### Highlight Colour
 
-The search match highlight colour can be modified via the list context menu (Search->Colour). The colour is persisted to the configuration file
+The search match highlight colour can be modified via the list context menu (Search->Colour). The colour is persisted to the configuration file.
 
 ## Filtering
 
