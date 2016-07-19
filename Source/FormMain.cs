@@ -99,6 +99,7 @@ namespace LogViewer
             SetProcessingState(false);
             statusProgress.Visible = true;
             this.cancellationTokenSource = new CancellationTokenSource();
+            menuToolsMultiStringSearch.Enabled = true;
 
             if (lf != null)
             {

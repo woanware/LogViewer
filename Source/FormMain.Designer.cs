@@ -134,6 +134,7 @@
             // 
             // menuToolsMultiStringSearch
             // 
+            this.menuToolsMultiStringSearch.Enabled = false;
             this.menuToolsMultiStringSearch.Name = "menuToolsMultiStringSearch";
             this.menuToolsMultiStringSearch.Size = new System.Drawing.Size(247, 30);
             this.menuToolsMultiStringSearch.Text = "Multi-String Search";

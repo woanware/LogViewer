@@ -100,7 +100,7 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // FormSearches
+            // FormSearchTerms
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -114,7 +114,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(600, 500);
-            this.Name = "FormSearches";
+            this.Name = "FormSearchTerms";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Search Terms";
             ((System.ComponentModel.ISupportInitialize)(this.listSearchTerms)).EndInit();

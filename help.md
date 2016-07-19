@@ -26,6 +26,10 @@ There are four different search types available:
 
 By using the **Cumulative** search facility, there can be multiple search terms. Each of the terms can be enabled/disabled individually. The search terms can be accessed via the list context menu. When the **Search Terms** window is displayed, check or uncheck the search terms required, upon exiting the display will be refreshed.
 
+### Multi-String Search
+
+To search for multiple strings in one search, use the Tools->Multi-String Search menu. Select the search type, then use the import button to import the search patterns. Any previous search results are cleared when using the multi-string search. 
+
 ### Highlight Colour
 
 The search match highlight colour can be modified via the list context menu (Search->Colour). The colour is persisted to the configuration file
