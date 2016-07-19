@@ -7,7 +7,7 @@ namespace LogViewer
     /// <summary>
     /// 
     /// </summary>
-    public partial class FormSearches : Form
+    public partial class FormSearchTerms : Form
     {
         #region Member Variables/Properties
         public Searches Searches { get; private set; }
@@ -17,7 +17,7 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        public FormSearches(Searches searches)
+        public FormSearchTerms(Searches searches)
         {
             InitializeComponent();
 

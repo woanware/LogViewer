@@ -362,7 +362,7 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuSearchViewTerms_Click(object sender, EventArgs e)
         {
-            using (FormSearches f = new FormSearches(this.searches))
+            using (FormSearchTerms f = new FormSearchTerms(this.searches))
             {
                 DialogResult dr = f.ShowDialog(this);
                 if (dr == DialogResult.Cancel)

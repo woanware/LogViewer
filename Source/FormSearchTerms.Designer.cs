@@ -1,6 +1,6 @@
 ﻿namespace LogViewer
 {
-    partial class FormSearches
+    partial class FormSearchTerms
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSearches));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSearchTerms));
             this.listSearchTerms = new BrightIdeasSoftware.ObjectListView();
             this.olvcPattern = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);

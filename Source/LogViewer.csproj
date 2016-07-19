@@ -70,11 +70,17 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormSearches.cs">
+    <Compile Include="FormSearch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSearches.Designer.cs">
-      <DependentUpon>FormSearches.cs</DependentUpon>
+    <Compile Include="FormSearch.Designer.cs">
+      <DependentUpon>FormSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSearchTerms.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSearchTerms.Designer.cs">
+      <DependentUpon>FormSearchTerms.cs</DependentUpon>
     </Compile>
     <Compile Include="Global.cs" />
     <Compile Include="SearchCriteria.cs" />
@@ -89,8 +95,11 @@
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSearches.resx">
-      <DependentUpon>FormSearches.cs</DependentUpon>
+    <EmbeddedResource Include="FormSearch.resx">
+      <DependentUpon>FormSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSearchTerms.resx">
+      <DependentUpon>FormSearchTerms.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
