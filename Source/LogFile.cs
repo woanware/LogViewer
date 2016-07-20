@@ -282,7 +282,7 @@ namespace LogViewer
         /// </summary>
         /// <param name="searchText"></param>
         /// <param name="searchType"></param>
-        public void Search(SearchCriteria sc, bool cumulative, CancellationToken ct)
+        public void Search(SearchCriteria sc, bool cumulative, CancellationToken ct, int numContextLines)
         {
             Task.Run(() => {
 
@@ -301,6 +301,9 @@ namespace LogViewer
                         {
                             // Reset the match flag
                             ll.SearchMatches.Clear();
+                            //ll.IsContextLine = false;
+
+                            ClearContextLine(ll.LineNumber, numContextLines);
                         }
 
                         line = this.GetLine(ll.LineNumber);
@@ -348,6 +351,11 @@ namespace LogViewer
                         {
                             matches++;
                             ll.SearchMatches.Add(sc.Id);
+
+                            if (numContextLines > 0)
+                            {
+                                this.SetContextLines(ll.LineNumber, numContextLines);
+                            }
                         }
                     }
 
@@ -393,6 +401,54 @@ namespace LogViewer
             this.ExportToFile(lines, filePath, ct);
         }
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lineNumber"></param>
+        /// <param name="numLines"></param>
+        private void SetContextLines(long lineNumber, int numLines)
+        {
+            long temp = numLines;
+            if (lineNumber < this.Lines.Count)
+            {
+                if (numLines + lineNumber > this.Lines.Count - 1)
+                {
+                    temp = this.Lines.Count - lineNumber - 1;
+                }
+                for (int index = 1; index <= temp; index++)
+                {
+                    this.Lines[(int)lineNumber + index].IsContextLine = true;
+                }
+            }           
+
+            if (lineNumber > 0)
+            {
+                if (lineNumber - numLines < 0)
+                {
+                    temp = lineNumber;
+                }
+                for (int index = 1; index <= temp; index++)
+                {
+                    this.Lines[(int)lineNumber - index].IsContextLine = true;
+                }
+            }            
+        }
+
+        /// <summary>
+        /// Clear the line that is the next after the farthest context
+        /// line, so the flag is reset and we won't overwrite
+        /// </summary>
+        /// <param name="lineNumber"></param>
+        /// <param name="numLines"></param>
+        private void ClearContextLine(long lineNumber, int numLines)
+        {
+            long temp = numLines;
+            if ((int)lineNumber + numLines + 1 < this.Lines.Count - 1)
+            {
+                this.Lines[(int)lineNumber + numLines + 1].IsContextLine = false;
+            }
+        }
 
         /// <summary>
         /// 

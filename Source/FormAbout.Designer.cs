@@ -36,6 +36,8 @@
             this.lblVer = new System.Windows.Forms.Label();
             this.lblApp = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.linkIcons8 = new System.Windows.Forms.LinkLabel();
+            this.labelIconsBy = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -76,7 +78,7 @@
             // btnClose
             // 
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(338, 216);
+            this.btnClose.Location = new System.Drawing.Point(338, 256);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(108, 32);
@@ -118,13 +120,35 @@
             this.pictureBox1.TabIndex = 27;
             this.pictureBox1.TabStop = false;
             // 
+            // linkIcons8
+            // 
+            this.linkIcons8.AutoSize = true;
+            this.linkIcons8.Location = new System.Drawing.Point(205, 227);
+            this.linkIcons8.Name = "linkIcons8";
+            this.linkIcons8.Size = new System.Drawing.Size(89, 20);
+            this.linkIcons8.TabIndex = 30;
+            this.linkIcons8.TabStop = true;
+            this.linkIcons8.Text = "icons8.com";
+            this.linkIcons8.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkIcons8_LinkClicked);
+            // 
+            // labelIconsBy
+            // 
+            this.labelIconsBy.AutoSize = true;
+            this.labelIconsBy.Location = new System.Drawing.Point(134, 227);
+            this.labelIconsBy.Name = "labelIconsBy";
+            this.labelIconsBy.Size = new System.Drawing.Size(68, 20);
+            this.labelIconsBy.TabIndex = 31;
+            this.labelIconsBy.Text = "Icons by";
+            // 
             // FormAbout
             // 
             this.AcceptButton = this.btnClose;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(458, 259);
+            this.ClientSize = new System.Drawing.Size(458, 299);
+            this.Controls.Add(this.labelIconsBy);
+            this.Controls.Add(this.linkIcons8);
             this.Controls.Add(this.lblVer);
             this.Controls.Add(this.lblApp);
             this.Controls.Add(this.pictureBox1);
@@ -156,5 +180,7 @@
         private System.Windows.Forms.Label lblVer;
         private System.Windows.Forms.Label lblApp;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.LinkLabel linkIcons8;
+        private System.Windows.Forms.Label labelIconsBy;
     }
 }

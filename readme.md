@@ -42,3 +42,11 @@ The main reasons for this being faster is that it has removed some functionality
 ## Screenshot
 
 ![](screenshot.png)
+
+## Third Party
+
+[ObjectListView](http://objectlistview.sourceforge.net/cs/index.html): Used for displaying the file lines
+
+[Nett](https://github.com/paiden/Nett): Used for the TOML configuration file reading/writing
+
+[icons8](https://icons8.com): Icons used within the application

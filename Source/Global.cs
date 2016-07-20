@@ -13,6 +13,16 @@
             RegexCaseInsensitive = 2,
             RegexCaseSensitive = 3,
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum ViewMode
+        {
+            Standard = 1,
+            FilterShow = 2,
+            FilterHide = 3
+        }
         #endregion
     }
 }

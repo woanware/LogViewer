@@ -24,7 +24,9 @@ namespace LogViewer
         private List<ushort> filterIds;
         private bool processing;
         private Color highlightColour = Color.Lime;
+        private Color contextColour = Color.LightGray;
         private Configuration config;
+        private Global.ViewMode viewMode = Global.ViewMode.Standard;
         #endregion
 
         #region Constructor
@@ -58,6 +60,7 @@ namespace LogViewer
             }
 
             this.highlightColour = config.GetHighlightColour();
+            this.contextColour = config.GetContextColour();
 
             this.olvcLineNumber.AspectGetter = delegate (object x)
             {
@@ -144,7 +147,7 @@ namespace LogViewer
             SetProcessingState(false);
             statusProgress.Visible = true;
             this.cancellationTokenSource = new CancellationTokenSource();
-            lf.Search(sc, toolButtonCumulative.Checked, cancellationTokenSource.Token);
+            lf.Search(sc, toolButtonCumulative.Checked, cancellationTokenSource.Token, config.NumContextLines);
         }
 
         /// <summary>
@@ -275,9 +278,16 @@ namespace LogViewer
         /// <param name="e"></param>
         private void listLines_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
         {
-            if (((LogLine)e.Model).SearchMatches.Intersect(filterIds).Any() == true)
+            if (this.viewMode != Global.ViewMode.FilterHide)
             {
-                e.Item.BackColor = highlightColour;
+                if (((LogLine)e.Model).SearchMatches.Intersect(filterIds).Any() == true)
+                {
+                    e.Item.BackColor = highlightColour;
+                }
+                else if (((LogLine)e.Model).IsContextLine == true)
+                {
+                    e.Item.BackColor = contextColour;
+                }
             }            
         }
 
@@ -336,6 +346,7 @@ namespace LogViewer
         private void contextMenuFilterClear_Click(object sender, EventArgs e)
         {
             this.listLines.ModelFilter = null;
+            this.viewMode = Global.ViewMode.Standard;
         }
 
         /// <summary>
@@ -345,8 +356,9 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuFilterShowMatched_Click(object sender, EventArgs e)
         {
+            this.viewMode = Global.ViewMode.FilterShow;
             this.listLines.ModelFilter = new ModelFilter(delegate (object x) {
-                return x != null && (((LogLine)x).SearchMatches.Intersect(filterIds).Any() == true);
+                return x != null && (((LogLine)x).SearchMatches.Intersect(filterIds).Any() == true || (((LogLine)x).IsContextLine == true));
             });
         }
 
@@ -356,7 +368,8 @@ namespace LogViewer
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void contextMenuFilterHideMatched_Click(object sender, EventArgs e)
-        {           
+        {
+            this.viewMode = Global.ViewMode.FilterHide;
             this.listLines.ModelFilter = new ModelFilter(delegate (object x) {
                 return x != null && (((LogLine)x).SearchMatches.Intersect(filterIds).Any() == false);
             });
@@ -400,7 +413,7 @@ namespace LogViewer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void contextMenuSearchColour_Click(object sender, EventArgs e)
+        private void contextFilterColourFilter_Click(object sender, EventArgs e)
         {
             ColorDialog cd = new ColorDialog();
             DialogResult dr = cd.ShowDialog(this);
@@ -410,6 +423,24 @@ namespace LogViewer
             }
 
             this.highlightColour = cd.Color;
+            listLines.Refresh();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextFilterColourContext_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            DialogResult dr = cd.ShowDialog(this);
+            if (dr == DialogResult.Cancel)
+            {
+                return;
+            }
+
+            this.contextColour = cd.Color;
             listLines.Refresh();
         }
 
@@ -592,6 +623,19 @@ namespace LogViewer
                 statusProgress.Visible = true;
                 this.cancellationTokenSource = new CancellationTokenSource();
                 lf.SearchMulti(f.NewSearches, cancellationTokenSource.Token);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void menuToolsConfiguration_Click(object sender, EventArgs e)
+        {
+            using (FormConfiguration f = new FormConfiguration(this.config))
+            {
+                f.ShowDialog(this);
             }
         }
         #endregion

@@ -45,6 +45,20 @@ namespace LogViewer
             process.StartInfo.UseShellExecute = true;
             process.Start();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void linkIcons8_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            process.StartInfo.RedirectStandardOutput = false;
+            process.StartInfo.FileName = "https://" + linkIcons8.Text;
+            process.StartInfo.UseShellExecute = true;
+            process.Start();
+        }
         #endregion
 
         #region Button Event Handlers

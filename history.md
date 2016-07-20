@@ -1,5 +1,9 @@
 # History
 
+# v0.0.5
+
+- Added functionality to show a configurable number of lines before and after a search hit
+
 # v0.0.4
 
 - Added multi-string search
