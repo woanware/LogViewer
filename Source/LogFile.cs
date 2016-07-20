@@ -187,7 +187,7 @@ namespace LogViewer
         /// </summary>
         /// <param name="searchText"></param>
         /// <param name="searchType"></param>
-        public void SearchMulti(List<SearchCriteria> scs, CancellationToken ct)
+        public void SearchMulti(List<SearchCriteria> scs, CancellationToken ct, int numContextLines)
         {
             Task.Run(() => {
 
@@ -204,6 +204,7 @@ namespace LogViewer
                     {
                         // Reset the match flag
                         ll.SearchMatches.Clear();
+                        ClearContextLine(ll.LineNumber, numContextLines);
 
                         foreach (SearchCriteria sc in scs)
                         {
@@ -244,15 +245,24 @@ namespace LogViewer
                                     break;
                             }
 
-                            if (located == false)
-                            {
-                                ll.SearchMatches.Remove(sc.Id);
-                            }
-                            else
+                            //if (located == false)
+                            //{
+                            //    ll.SearchMatches.Remove(sc.Id);
+                            //}
+                            //else
+                            //{
+                            if (located == true)
                             {
                                 matches++;
                                 ll.SearchMatches.Add(sc.Id);
+
+                                if (numContextLines > 0)
+                                {
+                                    this.SetContextLines(ll.LineNumber, numContextLines);
+                                }
                             }
+                               
+                            //}
                         }
 
                         if (counter++ % 50 == 0)

@@ -622,7 +622,7 @@ namespace LogViewer
                 SetProcessingState(false);
                 statusProgress.Visible = true;
                 this.cancellationTokenSource = new CancellationTokenSource();
-                lf.SearchMulti(f.NewSearches, cancellationTokenSource.Token);
+                lf.SearchMulti(f.NewSearches, cancellationTokenSource.Token, config.NumContextLines);
             }
         }
 
