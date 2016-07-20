@@ -67,12 +67,13 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuFilterClear = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.contextFilterColour = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextFilterColourFilter = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextFilterColourContext = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuSep1 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuSearch = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuSearchViewTerms = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+            this.contextMenuSearchColour = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuSearchMatch = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuSearchColourContext = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuSep2 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuExport = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuExportAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -374,8 +375,7 @@
             this.contextMenuFilterHideMatched,
             this.toolStripMenuItem1,
             this.contextMenuFilterClear,
-            this.toolStripMenuItem3,
-            this.contextFilterColour});
+            this.toolStripMenuItem3});
             this.contextMenuFilter.Name = "contextMenuFilter";
             this.contextMenuFilter.Size = new System.Drawing.Size(160, 30);
             this.contextMenuFilter.Text = "Filtering";
@@ -411,29 +411,6 @@
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.Size = new System.Drawing.Size(212, 6);
             // 
-            // contextFilterColour
-            // 
-            this.contextFilterColour.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.contextFilterColourFilter,
-            this.contextFilterColourContext});
-            this.contextFilterColour.Name = "contextFilterColour";
-            this.contextFilterColour.Size = new System.Drawing.Size(215, 30);
-            this.contextFilterColour.Text = "Colour";
-            // 
-            // contextFilterColourFilter
-            // 
-            this.contextFilterColourFilter.Name = "contextFilterColourFilter";
-            this.contextFilterColourFilter.Size = new System.Drawing.Size(158, 30);
-            this.contextFilterColourFilter.Text = "Filter";
-            this.contextFilterColourFilter.Click += new System.EventHandler(this.contextFilterColourFilter_Click);
-            // 
-            // contextFilterColourContext
-            // 
-            this.contextFilterColourContext.Name = "contextFilterColourContext";
-            this.contextFilterColourContext.Size = new System.Drawing.Size(158, 30);
-            this.contextFilterColourContext.Text = "Context";
-            this.contextFilterColourContext.Click += new System.EventHandler(this.contextFilterColourContext_Click);
-            // 
             // contextMenuSep1
             // 
             this.contextMenuSep1.Name = "contextMenuSep1";
@@ -442,7 +419,9 @@
             // contextMenuSearch
             // 
             this.contextMenuSearch.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.contextMenuSearchViewTerms});
+            this.contextMenuSearchViewTerms,
+            this.toolStripMenuItem4,
+            this.contextMenuSearchColour});
             this.contextMenuSearch.Name = "contextMenuSearch";
             this.contextMenuSearch.Size = new System.Drawing.Size(160, 30);
             this.contextMenuSearch.Text = "Search";
@@ -450,9 +429,37 @@
             // contextMenuSearchViewTerms
             // 
             this.contextMenuSearchViewTerms.Name = "contextMenuSearchViewTerms";
-            this.contextMenuSearchViewTerms.Size = new System.Drawing.Size(185, 30);
+            this.contextMenuSearchViewTerms.Size = new System.Drawing.Size(211, 30);
             this.contextMenuSearchViewTerms.Text = "View Terms";
             this.contextMenuSearchViewTerms.Click += new System.EventHandler(this.contextMenuSearchViewTerms_Click);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(208, 6);
+            // 
+            // contextMenuSearchColour
+            // 
+            this.contextMenuSearchColour.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextMenuSearchMatch,
+            this.contextMenuSearchColourContext});
+            this.contextMenuSearchColour.Name = "contextMenuSearchColour";
+            this.contextMenuSearchColour.Size = new System.Drawing.Size(211, 30);
+            this.contextMenuSearchColour.Text = "Colour";
+            // 
+            // contextMenuSearchMatch
+            // 
+            this.contextMenuSearchMatch.Name = "contextMenuSearchMatch";
+            this.contextMenuSearchMatch.Size = new System.Drawing.Size(211, 30);
+            this.contextMenuSearchMatch.Text = "Match";
+            this.contextMenuSearchMatch.Click += new System.EventHandler(this.contextMenuSearchColourMatch_Click);
+            // 
+            // contextMenuSearchColourContext
+            // 
+            this.contextMenuSearchColourContext.Name = "contextMenuSearchColourContext";
+            this.contextMenuSearchColourContext.Size = new System.Drawing.Size(211, 30);
+            this.contextMenuSearchColourContext.Text = "Context";
+            this.contextMenuSearchColourContext.Click += new System.EventHandler(this.contextMenuSearchColourContext_Click);
             // 
             // contextMenuSep2
             // 
@@ -571,9 +578,10 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem menuToolsConfiguration;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem contextFilterColour;
-        private System.Windows.Forms.ToolStripMenuItem contextFilterColourFilter;
-        private System.Windows.Forms.ToolStripMenuItem contextFilterColourContext;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem contextMenuSearchColour;
+        private System.Windows.Forms.ToolStripMenuItem contextMenuSearchMatch;
+        private System.Windows.Forms.ToolStripMenuItem contextMenuSearchColourContext;
     }
 }
 

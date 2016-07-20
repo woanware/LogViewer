@@ -245,12 +245,6 @@ namespace LogViewer
                                     break;
                             }
 
-                            //if (located == false)
-                            //{
-                            //    ll.SearchMatches.Remove(sc.Id);
-                            //}
-                            //else
-                            //{
                             if (located == true)
                             {
                                 matches++;
@@ -260,9 +254,7 @@ namespace LogViewer
                                 {
                                     this.SetContextLines(ll.LineNumber, numContextLines);
                                 }
-                            }
-                               
-                            //}
+                            }                              
                         }
 
                         if (counter++ % 50 == 0)

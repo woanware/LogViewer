@@ -30,9 +30,13 @@ By using the **Cumulative** search facility, there can be multiple search terms.
 
 To search for multiple strings in one search, use the Tools->Multi-String Search menu. Select the search type, then use the import button to import the search patterns. Any previous search results are cleared when using the multi-string search. 
 
-### Highlight Colour
+### Highlight Line Colour
 
-The search match highlight colour can be modified via the list context menu (Search->Colour). The colour is persisted to the configuration file.
+The search match highlight colour can be modified via the list context menu (Search->Colour->Match). The colour is persisted to the configuration file.
+
+### Context Line Colour
+
+If the **Show context lines** option is enabled, then the context line colour can be modified via the list context menu (Search->Colour->Context). The colour is persisted to the configuration file.
 
 ## Filtering
 
@@ -48,5 +52,9 @@ The export functionality exports all lines within the current view or the select
 ## Copy Line
 
 The selected line's contents can be copied to the clipboard via the list context menu. There is a maximum limit of 10000 lines
+
+## Context Lines
+
+To show context around a match, the searches can be configured (Tools->Configuration) to show a user configurable number of lines before and after a search match.
 
 

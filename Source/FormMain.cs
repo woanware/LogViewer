@@ -413,7 +413,7 @@ namespace LogViewer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void contextFilterColourFilter_Click(object sender, EventArgs e)
+        private void contextMenuSearchColourMatch_Click(object sender, EventArgs e)
         {
             ColorDialog cd = new ColorDialog();
             DialogResult dr = cd.ShowDialog(this);
@@ -431,7 +431,7 @@ namespace LogViewer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void contextFilterColourContext_Click(object sender, EventArgs e)
+        private void contextMenuSearchColourContext_Click(object sender, EventArgs e)
         {
             ColorDialog cd = new ColorDialog();
             DialogResult dr = cd.ShowDialog(this);
@@ -689,5 +689,7 @@ namespace LogViewer
             this.cancellationTokenSource.Cancel();          
         }
         #endregion
+
+        
     }
 }
