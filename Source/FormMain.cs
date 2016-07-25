@@ -638,6 +638,35 @@ namespace LogViewer
                 f.ShowDialog(this);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextGoToLine_Click(object sender, EventArgs e)
+        {
+            using (FormGoToLine f = new FormGoToLine())
+            {
+                DialogResult dr = f.ShowDialog(this);
+                if (dr == DialogResult.Cancel)
+                {
+                    return;
+                }
+
+                listLines.EnsureVisible(f.LineNumber - 1);
+                var ll = this.lf.Lines.SingleOrDefault(x => x.LineNumber == f.LineNumber);
+                if (ll != null)
+                {
+                    listLines.SelectedIndex = ll.LineNumber - 1;
+                    if (listLines.SelectedItem != null)
+                    {
+                        listLines.FocusedItem = listLines.SelectedItem;
+                    }                   
+                }                
+            }
+
+        }
         #endregion
 
         #region UI Methods
@@ -688,8 +717,7 @@ namespace LogViewer
         {
             this.cancellationTokenSource.Cancel();          
         }
-        #endregion
 
-        
+        #endregion
     }
 }
