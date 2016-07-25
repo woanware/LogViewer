@@ -57,4 +57,8 @@ The selected line's contents can be copied to the clipboard via the list context
 
 To show context around a match, the searches can be configured (Tools->Configuration) to show a user configurable number of lines before and after a search match.
 
+## Go To Line
+
+The various line functions can be accessed via the context menu. For example to go to a specific line, right click and select the **Lines->Go To Line** context menu item. A window will be displayed, enter the line number and click OK.
+
 

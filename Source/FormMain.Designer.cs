@@ -81,7 +81,10 @@
             this.contextMenuSep3 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
-            this.contextGoToLine = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextLines = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextLinesGoToLine = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextLinesGoToFirstLine = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextLinesGoToLastLine = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
@@ -366,10 +369,10 @@
             this.contextMenuSep3,
             this.contextMenuCopy,
             this.toolStripMenuItem5,
-            this.contextGoToLine});
+            this.contextLines});
             this.contextMenu.Name = "contextMenu";
             this.contextMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.contextMenu.Size = new System.Drawing.Size(180, 178);
+            this.contextMenu.Size = new System.Drawing.Size(161, 178);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // contextMenuFilter
@@ -381,7 +384,7 @@
             this.contextMenuFilterClear,
             this.toolStripMenuItem3});
             this.contextMenuFilter.Name = "contextMenuFilter";
-            this.contextMenuFilter.Size = new System.Drawing.Size(179, 30);
+            this.contextMenuFilter.Size = new System.Drawing.Size(160, 30);
             this.contextMenuFilter.Text = "Filtering";
             // 
             // contextMenuFilterShowMatched
@@ -418,7 +421,7 @@
             // contextMenuSep1
             // 
             this.contextMenuSep1.Name = "contextMenuSep1";
-            this.contextMenuSep1.Size = new System.Drawing.Size(176, 6);
+            this.contextMenuSep1.Size = new System.Drawing.Size(157, 6);
             // 
             // contextMenuSearch
             // 
@@ -427,7 +430,7 @@
             this.toolStripMenuItem4,
             this.contextMenuSearchColour});
             this.contextMenuSearch.Name = "contextMenuSearch";
-            this.contextMenuSearch.Size = new System.Drawing.Size(179, 30);
+            this.contextMenuSearch.Size = new System.Drawing.Size(160, 30);
             this.contextMenuSearch.Text = "Search";
             // 
             // contextMenuSearchViewTerms
@@ -468,7 +471,7 @@
             // contextMenuSep2
             // 
             this.contextMenuSep2.Name = "contextMenuSep2";
-            this.contextMenuSep2.Size = new System.Drawing.Size(176, 6);
+            this.contextMenuSep2.Size = new System.Drawing.Size(157, 6);
             // 
             // contextMenuExport
             // 
@@ -476,7 +479,7 @@
             this.contextMenuExportAll,
             this.contextMenuExportSelected});
             this.contextMenuExport.Name = "contextMenuExport";
-            this.contextMenuExport.Size = new System.Drawing.Size(179, 30);
+            this.contextMenuExport.Size = new System.Drawing.Size(160, 30);
             this.contextMenuExport.Text = "Export";
             // 
             // contextMenuExportAll
@@ -496,26 +499,50 @@
             // contextMenuSep3
             // 
             this.contextMenuSep3.Name = "contextMenuSep3";
-            this.contextMenuSep3.Size = new System.Drawing.Size(176, 6);
+            this.contextMenuSep3.Size = new System.Drawing.Size(157, 6);
             // 
             // contextMenuCopy
             // 
             this.contextMenuCopy.Name = "contextMenuCopy";
-            this.contextMenuCopy.Size = new System.Drawing.Size(179, 30);
+            this.contextMenuCopy.Size = new System.Drawing.Size(160, 30);
             this.contextMenuCopy.Text = "Copy";
             this.contextMenuCopy.Click += new System.EventHandler(this.contextMenuCopy_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(176, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(157, 6);
             // 
-            // contextGoToLine
+            // contextLines
             // 
-            this.contextGoToLine.Name = "contextGoToLine";
-            this.contextGoToLine.Size = new System.Drawing.Size(179, 30);
-            this.contextGoToLine.Text = "Go To Line";
-            this.contextGoToLine.Click += new System.EventHandler(this.contextGoToLine_Click);
+            this.contextLines.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextLinesGoToLine,
+            this.contextLinesGoToFirstLine,
+            this.contextLinesGoToLastLine});
+            this.contextLines.Name = "contextLines";
+            this.contextLines.Size = new System.Drawing.Size(160, 30);
+            this.contextLines.Text = "Lines";
+            // 
+            // contextLinesGoToLine
+            // 
+            this.contextLinesGoToLine.Name = "contextLinesGoToLine";
+            this.contextLinesGoToLine.Size = new System.Drawing.Size(217, 30);
+            this.contextLinesGoToLine.Text = "Go To Line";
+            this.contextLinesGoToLine.Click += new System.EventHandler(this.contextLinesGoToLine_Click);
+            // 
+            // contextLinesGoToFirstLine
+            // 
+            this.contextLinesGoToFirstLine.Name = "contextLinesGoToFirstLine";
+            this.contextLinesGoToFirstLine.Size = new System.Drawing.Size(217, 30);
+            this.contextLinesGoToFirstLine.Text = "Go To First Line";
+            this.contextLinesGoToFirstLine.Click += new System.EventHandler(this.contextLinesGoToFirstLine_Click);
+            // 
+            // contextLinesGoToLastLine
+            // 
+            this.contextLinesGoToLastLine.Name = "contextLinesGoToLastLine";
+            this.contextLinesGoToLastLine.Size = new System.Drawing.Size(217, 30);
+            this.contextLinesGoToLastLine.Text = "Go To Last Line";
+            this.contextLinesGoToLastLine.Click += new System.EventHandler(this.contextLinesGoToLastLine_Click);
             // 
             // FormMain
             // 
@@ -599,7 +626,10 @@
         private System.Windows.Forms.ToolStripMenuItem contextMenuSearchMatch;
         private System.Windows.Forms.ToolStripMenuItem contextMenuSearchColourContext;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
-        private System.Windows.Forms.ToolStripMenuItem contextGoToLine;
+        private System.Windows.Forms.ToolStripMenuItem contextLines;
+        private System.Windows.Forms.ToolStripMenuItem contextLinesGoToLine;
+        private System.Windows.Forms.ToolStripMenuItem contextLinesGoToFirstLine;
+        private System.Windows.Forms.ToolStripMenuItem contextLinesGoToLastLine;
     }
 }
 

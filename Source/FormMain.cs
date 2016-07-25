@@ -345,8 +345,21 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuFilterClear_Click(object sender, EventArgs e)
         {
+            // Get the currently selected row
+            var ll = (LogLine)listLines.SelectedObject;
+
             this.listLines.ModelFilter = null;
             this.viewMode = Global.ViewMode.Standard;
+
+            if (ll != null)
+            {
+                listLines.EnsureVisible(ll.LineNumber - 1);
+                listLines.SelectedIndex = ll.LineNumber - 1;
+                if (listLines.SelectedItem != null)
+                {
+                    listLines.FocusedItem = listLines.SelectedItem;
+                }
+            }
         }
 
         /// <summary>
@@ -505,8 +518,83 @@ namespace LogViewer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        private void contextLinesGoToLine_Click(object sender, EventArgs e)
+        {
+            using (FormGoToLine f = new FormGoToLine())
+            {
+                DialogResult dr = f.ShowDialog(this);
+                if (dr == DialogResult.Cancel)
+                {
+                    return;
+                }
+
+                listLines.EnsureVisible(f.LineNumber - 1);
+                var ll = this.lf.Lines.SingleOrDefault(x => x.LineNumber == f.LineNumber);
+                if (ll != null)
+                {
+                    listLines.SelectedIndex = ll.LineNumber - 1;
+                    if (listLines.SelectedItem != null)
+                    {
+                        listLines.FocusedItem = listLines.SelectedItem;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextLinesGoToFirstLine_Click(object sender, EventArgs e)
+        {
+            listLines.EnsureVisible(0);
+            listLines.SelectedIndex = 0;
+            if (listLines.SelectedItem != null)
+            {
+                listLines.FocusedItem = listLines.SelectedItem;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextLinesGoToLastLine_Click(object sender, EventArgs e)
+        {
+            listLines.EnsureVisible(lf.LineCount - 1);
+            listLines.SelectedIndex = lf.LineCount - 1;
+            if (listLines.SelectedItem != null)
+            {
+                listLines.FocusedItem = listLines.SelectedItem;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            bool enableLineOps = true;
+            if (lf == null)
+            {
+                enableLineOps = false;
+            }
+            else
+            {
+                if (lf.LineCount == 0)
+                {
+                    enableLineOps = false;
+                }
+            }
+
+            contextLinesGoToFirstLine.Enabled = enableLineOps;
+            contextLinesGoToLastLine.Enabled = enableLineOps;
+            contextLinesGoToLine.Enabled = enableLineOps;
+
             if (listLines.SelectedObjects.Count > this.config.MultiSelectLimit)
             {
                 contextMenuCopy.Enabled = false;
@@ -637,35 +725,6 @@ namespace LogViewer
             {
                 f.ShowDialog(this);
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void contextGoToLine_Click(object sender, EventArgs e)
-        {
-            using (FormGoToLine f = new FormGoToLine())
-            {
-                DialogResult dr = f.ShowDialog(this);
-                if (dr == DialogResult.Cancel)
-                {
-                    return;
-                }
-
-                listLines.EnsureVisible(f.LineNumber - 1);
-                var ll = this.lf.Lines.SingleOrDefault(x => x.LineNumber == f.LineNumber);
-                if (ll != null)
-                {
-                    listLines.SelectedIndex = ll.LineNumber - 1;
-                    if (listLines.SelectedItem != null)
-                    {
-                        listLines.FocusedItem = listLines.SelectedItem;
-                    }                   
-                }                
-            }
-
         }
         #endregion
 

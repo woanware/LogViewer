@@ -1,8 +1,14 @@
 # History
 
+# v0.0.6
+
+- Added functionality to go to a specific line (Thanks TomY)
+- Added functionality to go to first and last lines
+- When clearing the filter, the selected row is remembered and kept selected if the filtering is cleared (Thanks TomY)
+
 # v0.0.5
 
-- Added functionality to show a configurable number of lines before and after a search hit
+- Added functionality to show a configurable number of lines before and after a search hit (Thanks TomY)
 
 # v0.0.4
 

@@ -12,7 +12,7 @@ The use of the custom control would make debugging any future issues a lot harde
 
 The core operation of LogViewer works in the same way as Highlighter e.g. parse the file, find the line offsets and  line lengths, then when a line is needed for display, an existing file stream is used to seek to the offset, and then read X bytes.
 
-I tested the v0.0.1 release of LogViewer against v1.1.3 of Mandiant Highlighter. My test log file was 1.2 GB and had 4.4 millions rows. The following shows the operation and duration of the operation to compare:
+I tested the v0.0.1 release of LogViewer against v1.1.3 of Mandiant Highlighter. My test log file was 1.2 GB and had 4.4 million rows. The following shows the operation and duration of the operation to compare:
 
 - Load (LogViewer): 15s
 - Load (Highlighter): 42s
