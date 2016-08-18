@@ -114,6 +114,8 @@ namespace LogViewer
                 lf.Dispose();
             }
 
+            this.Text = "LogViewer - " + filePath;
+
             lf = new LogFile();
             lf.ProgressUpdate += LogFile_LoadProgress;
             lf.LoadComplete += LogFile_LoadComplete;

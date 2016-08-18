@@ -1,5 +1,9 @@
 # History
 
+# v0.0.7
+
+- Show the loaded file path in the Title bar (Thanks TomY)
+
 # v0.0.6
 
 - Added functionality to go to a specific line (Thanks TomY)
