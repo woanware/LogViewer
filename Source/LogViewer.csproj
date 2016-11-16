@@ -76,6 +76,12 @@
     <Compile Include="FormGoToLine.Designer.cs">
       <DependentUpon>FormGoToLine.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormLine.Designer.cs">
+      <DependentUpon>FormLine.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormGoToLine.resx">
       <DependentUpon>FormGoToLine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormLine.resx">
+      <DependentUpon>FormLine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>

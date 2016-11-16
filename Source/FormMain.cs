@@ -111,6 +111,7 @@ namespace LogViewer
                 lf.LoadComplete -= LogFile_LoadComplete;
                 lf.SearchComplete -= LogFile_SearchComplete;
                 lf.ExportComplete -= LogFile_ExportComplete;
+                lf.Error -= LogFile_Error;
                 lf.Dispose();
             }
 
@@ -121,6 +122,7 @@ namespace LogViewer
             lf.LoadComplete += LogFile_LoadComplete;
             lf.SearchComplete += LogFile_SearchComplete;
             lf.ExportComplete += LogFile_ExportComplete;
+            lf.Error += LogFile_Error;
             lf.Load(filePath, cancellationTokenSource.Token);        
         }
 
@@ -191,6 +193,27 @@ namespace LogViewer
         #endregion
 
         #region Log File Object Event Handlers
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        private void LogFile_Error(string message)
+        {
+            UserInterface.DisplayErrorMessageBox(this, message);
+
+            synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
+                this.Text = "LogViewer";
+                statusProgress.Visible = false;
+                this.hourGlass.Dispose();
+                SetProcessingState(true);
+                this.cancellationTokenSource.Dispose();
+                UpdateStatusLabel("Load cancelled", statusLabelMain);
+                this.processing = false;
+
+            }), null);        
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -309,6 +332,10 @@ namespace LogViewer
             {
                 e.Effect = DragDropEffects.Copy;
             }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
         }
 
         /// <summary>
@@ -336,6 +363,16 @@ namespace LogViewer
             }
 
             LoadFile(files[0]);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listLines_ItemActivate(object sender, EventArgs e)
+        {
+
         }
         #endregion
 
@@ -780,5 +817,15 @@ namespace LogViewer
         }
 
         #endregion
+
+        private void FormMain_DragDrop(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void panelMain_DragDrop(object sender, DragEventArgs e)
+        {
+
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace LogViewer
         public delegate void CompleteEvent(TimeSpan duration, bool cancelled);
         public delegate void BoolEvent(bool val);
         public delegate void DefaultEvent();
+        public delegate void MessageEvent(string message);
         public delegate void ProgressUpdateEvent(int percent);
         #endregion
 
@@ -27,6 +28,7 @@ namespace LogViewer
         public event CompleteEvent LoadComplete;
         public event CompleteEvent ExportComplete;
         public event ProgressUpdateEvent ProgressUpdate;
+        public event MessageEvent Error;
         #endregion
 
         #region Member Variables
@@ -56,6 +58,7 @@ namespace LogViewer
 
                 DateTime start = DateTime.Now;
                 bool cancelled = false;
+                bool error = false;
                 try
                 {                    
                     byte[] tempBuffer = new byte[1024 * 1024];
@@ -163,12 +166,20 @@ namespace LogViewer
                         }                       
                     } // WHILE
                 }
+                catch (IOException ex)
+                {
+                    OnError(ex.Message);
+                    error = true;
+                }
                 finally
                 {
-                    DateTime end = DateTime.Now;
+                    if (error == false)
+                    {
+                        DateTime end = DateTime.Now;
 
-                    OnProgressUpdate(100);
-                    OnLoadComplete(end - start, cancelled);
+                        OnProgressUpdate(100);
+                        OnLoadComplete(end - start, cancelled);
+                    }                   
                 }
             });
         }
@@ -576,6 +587,18 @@ namespace LogViewer
         }
 
         #region Event Methods
+        /// <summary>
+        /// 
+        /// </summary>
+        private void OnError(string message)
+        {
+            var handler = Error;
+            if (handler != null)
+            {
+                handler(message);
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
