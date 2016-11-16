@@ -64,11 +64,21 @@ namespace LogViewer
 
             this.olvcLineNumber.AspectGetter = delegate (object x)
             {
+                if (((LogLine)x) == null )
+                {
+                    return "";
+                }
+
                 return (((LogLine)x).LineNumber + 1);
             };
 
             this.olvcText.AspectGetter = delegate (object x)
             {
+                if (((LogLine)x) == null)
+                {
+                    return "";
+                }
+
                 return (lf.GetLine(((LogLine)x).LineNumber));
             };
         }
@@ -103,6 +113,12 @@ namespace LogViewer
             statusProgress.Visible = true;
             this.cancellationTokenSource = new CancellationTokenSource();
             menuToolsMultiStringSearch.Enabled = true;
+
+            // Clear any existing filters/reset values
+            this.listLines.ModelFilter = null;
+            this.viewMode = Global.ViewMode.Standard;
+            this.searches = new Searches();
+            this.filterIds.Clear();
 
             if (lf != null)
             {
@@ -209,6 +225,7 @@ namespace LogViewer
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
                 UpdateStatusLabel("Load cancelled", statusLabelMain);
+                UpdateStatusLabel("", statusLabelSearch);
                 this.processing = false;
 
             }), null);        
@@ -289,6 +306,7 @@ namespace LogViewer
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
                 UpdateStatusLabel(lf.Lines.Count + " Lines # Duration: " + duration, statusLabelMain);
+                UpdateStatusLabel("", statusLabelSearch);
                 this.processing = false;
 
             }), null);           
@@ -305,6 +323,11 @@ namespace LogViewer
         {
             if (this.viewMode != Global.ViewMode.FilterHide)
             {
+                if ((LogLine)e.Model == null)
+                {
+                    return;
+                }
+
                 if (((LogLine)e.Model).SearchMatches.Intersect(filterIds).Any() == true)
                 {
                     e.Item.BackColor = highlightColour;
@@ -372,7 +395,16 @@ namespace LogViewer
         /// <param name="e"></param>
         private void listLines_ItemActivate(object sender, EventArgs e)
         {
+            if (listLines.SelectedObjects.Count != 1)
+            {
+                return;
+            }
 
+            LogLine ll = (LogLine)listLines.SelectedObjects[0];
+            using (FormLine f = new FormLine(this.lf.GetLine(ll.LineNumber)))
+            {
+                f.ShowDialog(this);
+            }
         }
         #endregion
 
@@ -820,12 +852,46 @@ namespace LogViewer
 
         private void FormMain_DragDrop(object sender, DragEventArgs e)
         {
+            if (processing == true)
+            {
+                return;
+            }
 
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files.Length == 0)
+            {
+                return;
+            }
+
+            if (files.Length > 1)
+            {
+                UserInterface.DisplayMessageBox(this, "Only one file can be processed at one time", MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            LoadFile(files[0]);
         }
 
         private void panelMain_DragDrop(object sender, DragEventArgs e)
         {
 
+        }
+
+        private void FormMain_DragEnter(object sender, DragEventArgs e)
+        {
+            if (processing == true)
+            {
+                return;
+            }
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
         }
     }
 }

@@ -12,9 +12,11 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        public FormLine()
+        public FormLine(string line)
         {
             InitializeComponent();
+
+            textLine.Text = line;
         }
         #endregion
 

@@ -57,6 +57,9 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolButtonSearch = new System.Windows.Forms.ToolStripButton();
             this.panelMain = new System.Windows.Forms.Panel();
+            this.listLines = new BrightIdeasSoftware.FastObjectListView();
+            this.olvcLineNumber = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvcText = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuFilterShowMatched = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,15 +84,12 @@
             this.contextLinesGoToLine = new System.Windows.Forms.ToolStripMenuItem();
             this.contextLinesGoToFirstLine = new System.Windows.Forms.ToolStripMenuItem();
             this.contextLinesGoToLastLine = new System.Windows.Forms.ToolStripMenuItem();
-            this.listLines = new BrightIdeasSoftware.FastObjectListView();
-            this.olvcLineNumber = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvcText = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.panelMain.SuspendLayout();
-            this.contextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listLines)).BeginInit();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -306,7 +306,6 @@
             // 
             // panelMain
             // 
-            this.panelMain.AllowDrop = true;
             this.panelMain.Controls.Add(this.listLines);
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(0, 66);
@@ -314,6 +313,46 @@
             this.panelMain.Size = new System.Drawing.Size(1346, 436);
             this.panelMain.TabIndex = 5;
             this.panelMain.DragDrop += new System.Windows.Forms.DragEventHandler(this.panelMain_DragDrop);
+            // 
+            // listLines
+            // 
+            this.listLines.AllColumns.Add(this.olvcLineNumber);
+            this.listLines.AllColumns.Add(this.olvcText);
+            this.listLines.AllowDrop = true;
+            this.listLines.CellEditUseWholeCell = false;
+            this.listLines.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvcLineNumber,
+            this.olvcText});
+            this.listLines.ContextMenuStrip = this.contextMenu;
+            this.listLines.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listLines.FullRowSelect = true;
+            this.listLines.GridLines = true;
+            this.listLines.HideSelection = false;
+            this.listLines.Location = new System.Drawing.Point(0, 0);
+            this.listLines.Name = "listLines";
+            this.listLines.OwnerDraw = false;
+            this.listLines.ShowFilterMenuOnRightClick = false;
+            this.listLines.ShowGroups = false;
+            this.listLines.ShowSortIndicators = false;
+            this.listLines.Size = new System.Drawing.Size(1346, 436);
+            this.listLines.TabIndex = 0;
+            this.listLines.UseCompatibleStateImageBehavior = false;
+            this.listLines.UseFiltering = true;
+            this.listLines.View = System.Windows.Forms.View.Details;
+            this.listLines.VirtualMode = true;
+            this.listLines.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.listLines_FormatRow);
+            this.listLines.ItemActivate += new System.EventHandler(this.listLines_ItemActivate);
+            this.listLines.DragDrop += new System.Windows.Forms.DragEventHandler(this.listLines_DragDrop);
+            this.listLines.DragEnter += new System.Windows.Forms.DragEventHandler(this.listLines_DragEnter);
+            // 
+            // olvcLineNumber
+            // 
+            this.olvcLineNumber.Text = "Line No.";
+            // 
+            // olvcText
+            // 
+            this.olvcText.FillsFreeSpace = true;
+            this.olvcText.Text = "Data";
             // 
             // contextMenu
             // 
@@ -496,45 +535,9 @@
             this.contextLinesGoToLastLine.Text = "Go To Last Line";
             this.contextLinesGoToLastLine.Click += new System.EventHandler(this.contextLinesGoToLastLine_Click);
             // 
-            // listLines
-            // 
-            this.listLines.AllColumns.Add(this.olvcLineNumber);
-            this.listLines.AllColumns.Add(this.olvcText);
-            this.listLines.AllowDrop = true;
-            this.listLines.CellEditUseWholeCell = false;
-            this.listLines.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvcLineNumber,
-            this.olvcText});
-            this.listLines.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listLines.FullRowSelect = true;
-            this.listLines.HideSelection = false;
-            this.listLines.Location = new System.Drawing.Point(0, 0);
-            this.listLines.Name = "listLines";
-            this.listLines.OwnerDraw = false;
-            this.listLines.ShowFilterMenuOnRightClick = false;
-            this.listLines.ShowGroups = false;
-            this.listLines.ShowSortIndicators = false;
-            this.listLines.Size = new System.Drawing.Size(1346, 436);
-            this.listLines.TabIndex = 0;
-            this.listLines.UseCompatibleStateImageBehavior = false;
-            this.listLines.View = System.Windows.Forms.View.Details;
-            this.listLines.VirtualMode = true;
-            this.listLines.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.listLines_FormatRow);
-            this.listLines.ItemActivate += new System.EventHandler(this.listLines_ItemActivate);
-            this.listLines.DragDrop += new System.Windows.Forms.DragEventHandler(this.listLines_DragDrop);
-            this.listLines.DragEnter += new System.Windows.Forms.DragEventHandler(this.listLines_DragEnter);
-            // 
-            // olvcLineNumber
-            // 
-            this.olvcLineNumber.Text = "Line No.";
-            // 
-            // olvcText
-            // 
-            this.olvcText.FillsFreeSpace = true;
-            this.olvcText.Text = "Data";
-            // 
             // FormMain
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1346, 524);
@@ -550,6 +553,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.FormMain_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FormMain_DragEnter);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -557,8 +561,8 @@
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();
             this.panelMain.ResumeLayout(false);
-            this.contextMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.listLines)).EndInit();
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
