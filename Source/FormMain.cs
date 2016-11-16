@@ -97,6 +97,55 @@ namespace LogViewer
                 UserInterface.DisplayErrorMessageBox(this, ret);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FormMain_DragDrop(object sender, DragEventArgs e)
+        {
+            if (processing == true)
+            {
+                return;
+            }
+
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files.Length == 0)
+            {
+                return;
+            }
+
+            if (files.Length > 1)
+            {
+                UserInterface.DisplayMessageBox(this, "Only one file can be processed at one time", MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            LoadFile(files[0]);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FormMain_DragEnter(object sender, DragEventArgs e)
+        {
+            if (processing == true)
+            {
+                return;
+            }
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
         #endregion
 
         #region Log File Methods
@@ -301,6 +350,7 @@ namespace LogViewer
                     }
                 }
 
+                olvcLineNumber.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
                 statusProgress.Visible = false;
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
@@ -847,51 +897,6 @@ namespace LogViewer
         {
             this.cancellationTokenSource.Cancel();          
         }
-
         #endregion
-
-        private void FormMain_DragDrop(object sender, DragEventArgs e)
-        {
-            if (processing == true)
-            {
-                return;
-            }
-
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            if (files.Length == 0)
-            {
-                return;
-            }
-
-            if (files.Length > 1)
-            {
-                UserInterface.DisplayMessageBox(this, "Only one file can be processed at one time", MessageBoxIcon.Exclamation);
-                return;
-            }
-
-            LoadFile(files[0]);
-        }
-
-        private void panelMain_DragDrop(object sender, DragEventArgs e)
-        {
-
-        }
-
-        private void FormMain_DragEnter(object sender, DragEventArgs e)
-        {
-            if (processing == true)
-            {
-                return;
-            }
-
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effect = DragDropEffects.Copy;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
-        }
     }
 }

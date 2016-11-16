@@ -270,8 +270,8 @@
             // 
             this.dropdownSearchType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.dropdownSearchType.Items.AddRange(new object[] {
-            "Sub String Case Insensitive",
-            "Sub String Case Sensitive",
+            "String Case Insensitive",
+            "String Case Sensitive",
             "Regex Case Insensitive",
             "Regex Case Sensitive"});
             this.dropdownSearchType.Name = "dropdownSearchType";
@@ -312,30 +312,38 @@
             this.panelMain.Name = "panelMain";
             this.panelMain.Size = new System.Drawing.Size(1346, 436);
             this.panelMain.TabIndex = 5;
-            this.panelMain.DragDrop += new System.Windows.Forms.DragEventHandler(this.panelMain_DragDrop);
             // 
             // listLines
             // 
             this.listLines.AllColumns.Add(this.olvcLineNumber);
             this.listLines.AllColumns.Add(this.olvcText);
             this.listLines.AllowDrop = true;
+            this.listLines.AutoArrange = false;
+            this.listLines.CausesValidation = false;
             this.listLines.CellEditUseWholeCell = false;
             this.listLines.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvcLineNumber,
             this.olvcText});
             this.listLines.ContextMenuStrip = this.contextMenu;
             this.listLines.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listLines.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listLines.FullRowSelect = true;
             this.listLines.GridLines = true;
+            this.listLines.HasCollapsibleGroups = false;
+            this.listLines.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listLines.HideSelection = false;
+            this.listLines.IsSearchOnSortColumn = false;
             this.listLines.Location = new System.Drawing.Point(0, 0);
             this.listLines.Name = "listLines";
-            this.listLines.OwnerDraw = false;
+            this.listLines.SelectColumnsMenuStaysOpen = false;
+            this.listLines.SelectColumnsOnRightClick = false;
+            this.listLines.SelectColumnsOnRightClickBehaviour = BrightIdeasSoftware.ObjectListView.ColumnSelectBehaviour.None;
             this.listLines.ShowFilterMenuOnRightClick = false;
             this.listLines.ShowGroups = false;
             this.listLines.ShowSortIndicators = false;
             this.listLines.Size = new System.Drawing.Size(1346, 436);
             this.listLines.TabIndex = 0;
+            this.listLines.TriggerCellOverEventsWhenOverHeader = false;
             this.listLines.UseCompatibleStateImageBehavior = false;
             this.listLines.UseFiltering = true;
             this.listLines.View = System.Windows.Forms.View.Details;
@@ -348,6 +356,7 @@
             // olvcLineNumber
             // 
             this.olvcLineNumber.Text = "Line No.";
+            this.olvcLineNumber.Width = 95;
             // 
             // olvcText
             // 
