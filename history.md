@@ -1,5 +1,15 @@
 # History
 
+# v0.0.9
+
+- Fixed the missing horizontal scrollbar
+
+# v0.0.8
+
+- Added new window to use the contents of a full line. Double click or use Enter on a selected line.
+- Added error handling for locked files
+- Improved general handling when files are subsequently imported after an already loaded file
+
 # v0.0.7
 
 - Show the loaded file path in the Title bar (Thanks TomY)

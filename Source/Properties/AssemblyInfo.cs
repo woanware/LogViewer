@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("LogViewer")]
-[assembly: AssemblyDescription("Views logs!")]
+[assembly: AssemblyDescription("Views logs and other text files!")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("woanware")]
 [assembly: AssemblyProduct("LogViewer")]
-[assembly: AssemblyCopyright("Copyright © LogViewer 2016")]
+[assembly: AssemblyCopyright("Copyright © woanware 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.0.8")]
-[assembly: AssemblyFileVersion("0.0.8")]
+[assembly: AssemblyVersion("0.0.9")]
+[assembly: AssemblyFileVersion("0.0.9")]

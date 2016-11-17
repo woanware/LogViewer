@@ -360,7 +360,6 @@
             // 
             // olvcText
             // 
-            this.olvcText.FillsFreeSpace = true;
             this.olvcText.Text = "Data";
             // 
             // contextMenu
