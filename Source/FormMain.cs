@@ -81,6 +81,8 @@ namespace LogViewer
 
                 return (lf.GetLine(((LogLine)x).LineNumber));
             };
+
+            menuFileClose.Enabled = false;
         }
 
         /// <summary>
@@ -176,7 +178,7 @@ namespace LogViewer
                 lf.LoadComplete -= LogFile_LoadComplete;
                 lf.SearchComplete -= LogFile_SearchComplete;
                 lf.ExportComplete -= LogFile_ExportComplete;
-                lf.Error -= LogFile_Error;
+                lf.LoadError -= LogFile_LoadError;
                 lf.Dispose();
             }
 
@@ -187,7 +189,7 @@ namespace LogViewer
             lf.LoadComplete += LogFile_LoadComplete;
             lf.SearchComplete += LogFile_SearchComplete;
             lf.ExportComplete += LogFile_ExportComplete;
-            lf.Error += LogFile_Error;
+            lf.LoadError += LogFile_LoadError;
             lf.Load(filePath, cancellationTokenSource.Token);        
         }
 
@@ -262,7 +264,7 @@ namespace LogViewer
         /// 
         /// </summary>
         /// <param name="message"></param>
-        private void LogFile_Error(string message)
+        private void LogFile_LoadError(string message)
         {
             UserInterface.DisplayErrorMessageBox(this, message);
 
@@ -272,10 +274,11 @@ namespace LogViewer
                 statusProgress.Visible = false;
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
-                this.cancellationTokenSource.Dispose();
-                UpdateStatusLabel("Load cancelled", statusLabelMain);
-                UpdateStatusLabel("", statusLabelSearch);
+                this.cancellationTokenSource.Dispose();               
                 this.processing = false;
+
+                // Lets clear the LogFile state and set the UI correctly
+                menuFileClose_Click(this, null);
 
             }), null);        
         }
@@ -323,8 +326,7 @@ namespace LogViewer
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
                 UpdateStatusLabel("Export complete # Duration: " + duration, statusLabelSearch);
-                this.processing = false;
-
+                this.processing = false;               
             }), null);
         }
 
@@ -358,6 +360,7 @@ namespace LogViewer
                 UpdateStatusLabel(lf.Lines.Count + " Lines # Duration: " + duration, statusLabelMain);
                 UpdateStatusLabel("", statusLabelSearch);
                 this.processing = false;
+                menuFileClose.Enabled = true;
 
             }), null);           
         }
@@ -766,6 +769,38 @@ namespace LogViewer
             }
 
             LoadFile(openFileDialog.FileName);
+        }
+
+        /// <summary>
+        /// Close the resources used for opening and processing the log file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void menuFileClose_Click(object sender, EventArgs e)
+        {
+            this.Text = "LogViewer";
+
+            // Clear any existing filters/reset values
+            this.listLines.ModelFilter = null;
+            this.viewMode = Global.ViewMode.Standard;
+            this.searches = new Searches();
+            this.filterIds.Clear();
+
+            if (lf != null)
+            {
+                listLines.ClearObjects();
+                lf.ProgressUpdate -= LogFile_LoadProgress;
+                lf.LoadComplete -= LogFile_LoadComplete;
+                lf.SearchComplete -= LogFile_SearchComplete;
+                lf.ExportComplete -= LogFile_ExportComplete;
+                lf.LoadError -= LogFile_LoadError;
+                lf.Dispose();
+                lf = null;
+            }
+
+            menuFileClose.Enabled = false;
+            UpdateStatusLabel("", statusLabelMain);
+            UpdateStatusLabel("", statusLabelSearch);
         }
 
         /// <summary>

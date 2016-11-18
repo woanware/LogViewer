@@ -34,6 +34,8 @@
             this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.menuFileSep1 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuFileClose = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.menuFileExit = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTools = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsMultiStringSearch = new System.Windows.Forms.ToolStripMenuItem();
@@ -110,6 +112,8 @@
             this.menuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuFileOpen,
             this.menuFileSep1,
+            this.menuFileClose,
+            this.toolStripMenuItem3,
             this.menuFileExit});
             this.menuFile.Name = "menuFile";
             this.menuFile.Size = new System.Drawing.Size(50, 29);
@@ -126,6 +130,18 @@
             // 
             this.menuFileSep1.Name = "menuFileSep1";
             this.menuFileSep1.Size = new System.Drawing.Size(138, 6);
+            // 
+            // menuFileClose
+            // 
+            this.menuFileClose.Name = "menuFileClose";
+            this.menuFileClose.Size = new System.Drawing.Size(141, 30);
+            this.menuFileClose.Text = "Close";
+            this.menuFileClose.Click += new System.EventHandler(this.menuFileClose_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(138, 6);
             // 
             // menuFileExit
             // 
@@ -631,6 +647,8 @@
         private BrightIdeasSoftware.FastObjectListView listLines;
         private BrightIdeasSoftware.OLVColumn olvcLineNumber;
         private BrightIdeasSoftware.OLVColumn olvcText;
+        private System.Windows.Forms.ToolStripMenuItem menuFileClose;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
     }
 }
 

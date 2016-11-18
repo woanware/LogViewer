@@ -28,7 +28,7 @@ namespace LogViewer
         public event CompleteEvent LoadComplete;
         public event CompleteEvent ExportComplete;
         public event ProgressUpdateEvent ProgressUpdate;
-        public event MessageEvent Error;
+        public event MessageEvent LoadError;
         #endregion
 
         #region Member Variables
@@ -168,7 +168,7 @@ namespace LogViewer
                 }
                 catch (IOException ex)
                 {
-                    OnError(ex.Message);
+                    OnLoadError(ex.Message);
                     error = true;
                 }
                 finally
@@ -190,7 +190,10 @@ namespace LogViewer
         public void Dispose()
         {
             this.Lines.Clear();
-            this.fileStream.Dispose();
+            if (this.fileStream != null)
+            {
+                this.fileStream.Dispose();
+            }            
         }
 
         /// <summary>
@@ -590,9 +593,9 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        private void OnError(string message)
+        private void OnLoadError(string message)
         {
-            var handler = Error;
+            var handler = LoadError;
             if (handler != null)
             {
                 handler(message);

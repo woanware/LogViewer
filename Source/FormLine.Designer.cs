@@ -69,8 +69,6 @@
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.textLine);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(600, 450);
             this.Name = "FormLine";
             this.ShowInTaskbar = false;
