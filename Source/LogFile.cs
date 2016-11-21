@@ -373,18 +373,18 @@ namespace LogViewer
                                 this.SetContextLines(ll.LineNumber, numContextLines);
                             }
                         }
-                    }
 
-                    if (counter++ % 50 == 0)
-                    {
-                        OnProgressUpdate((int)((double)counter / (double)this.Lines.Count * 100));
-
-                        if (ct.IsCancellationRequested)
+                        if (counter++ % 50 == 0)
                         {
-                            cancelled = true;
-                            return;
+                            OnProgressUpdate((int)((double)counter / (double)this.Lines.Count * 100));
+
+                            if (ct.IsCancellationRequested)
+                            {
+                                cancelled = true;
+                                return;
+                            }
                         }
-                    }
+                    }                    
                 }
                 finally
                 {

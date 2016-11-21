@@ -1,5 +1,13 @@
 # History
 
+# v0.0.11
+
+- Fixed progress bar bug e.g. could not determine search progress in some situations
+
+# v0.0.10
+
+- Modified the UI to allow the user to close the loaded file and release resources. Makes it easier to unlock files for access by other applications
+
 # v0.0.9
 
 - Fixed the missing horizontal scrollbar
