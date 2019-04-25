@@ -42,9 +42,10 @@
             // buttonImport
             // 
             this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonImport.Location = new System.Drawing.Point(15, 434);
+            this.buttonImport.Location = new System.Drawing.Point(18, 521);
+            this.buttonImport.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(120, 40);
+            this.buttonImport.Size = new System.Drawing.Size(147, 48);
             this.buttonImport.TabIndex = 0;
             this.buttonImport.Text = "Import";
             this.buttonImport.UseVisualStyleBackColor = true;
@@ -61,17 +62,19 @@
             "Sub String Case Sensitive",
             "Regex Case Insensitive",
             "Regex Case Sensitive"});
-            this.comboType.Location = new System.Drawing.Point(62, 10);
+            this.comboType.Location = new System.Drawing.Point(76, 12);
+            this.comboType.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboType.Name = "comboType";
-            this.comboType.Size = new System.Drawing.Size(431, 28);
+            this.comboType.Size = new System.Drawing.Size(526, 32);
             this.comboType.TabIndex = 1;
             // 
             // labelSearchType
             // 
             this.labelSearchType.AutoSize = true;
-            this.labelSearchType.Location = new System.Drawing.Point(13, 13);
+            this.labelSearchType.Location = new System.Drawing.Point(16, 16);
+            this.labelSearchType.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelSearchType.Name = "labelSearchType";
-            this.labelSearchType.Size = new System.Drawing.Size(43, 20);
+            this.labelSearchType.Size = new System.Drawing.Size(57, 25);
             this.labelSearchType.TabIndex = 3;
             this.labelSearchType.Text = "Type";
             // 
@@ -87,12 +90,13 @@
             this.listTerms.Cursor = System.Windows.Forms.Cursors.Default;
             this.listTerms.FullRowSelect = true;
             this.listTerms.HideSelection = false;
-            this.listTerms.Location = new System.Drawing.Point(16, 55);
+            this.listTerms.Location = new System.Drawing.Point(20, 66);
+            this.listTerms.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.listTerms.Name = "listTerms";
             this.listTerms.OwnerDraw = false;
             this.listTerms.ShowFilterMenuOnRightClick = false;
             this.listTerms.ShowGroups = false;
-            this.listTerms.Size = new System.Drawing.Size(479, 373);
+            this.listTerms.Size = new System.Drawing.Size(585, 447);
             this.listTerms.TabIndex = 4;
             this.listTerms.UseCompatibleStateImageBehavior = false;
             this.listTerms.View = System.Windows.Forms.View.Details;
@@ -107,9 +111,11 @@
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.Location = new System.Drawing.Point(376, 434);
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.Location = new System.Drawing.Point(460, 521);
+            this.buttonCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(120, 40);
+            this.buttonCancel.Size = new System.Drawing.Size(147, 48);
             this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -118,9 +124,10 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(250, 434);
+            this.buttonOK.Location = new System.Drawing.Point(306, 521);
+            this.buttonOK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(120, 40);
+            this.buttonOK.Size = new System.Drawing.Size(147, 48);
             this.buttonOK.TabIndex = 6;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -128,9 +135,10 @@
             // 
             // FormSearch
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(508, 485);
+            this.CancelButton = this.buttonCancel;
+            this.ClientSize = new System.Drawing.Size(621, 582);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.listTerms);
@@ -138,9 +146,10 @@
             this.Controls.Add(this.comboType);
             this.Controls.Add(this.buttonImport);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(530, 541);
+            this.MinimumSize = new System.Drawing.Size(642, 636);
             this.Name = "FormSearch";
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;

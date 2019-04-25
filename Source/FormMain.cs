@@ -374,8 +374,8 @@ namespace LogViewer
         /// <param name="e"></param>
         private void listLines_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
         {
-            if (this.viewMode != Global.ViewMode.FilterHide)
-            {
+            //if (this.viewMode != Global.ViewMode.FilterHide)
+            //{
                 if ((LogLine)e.Model == null)
                 {
                     return;
@@ -389,7 +389,7 @@ namespace LogViewer
                 {
                     e.Item.BackColor = contextColour;
                 }
-            }            
+            //}            
         }
 
         /// <summary>

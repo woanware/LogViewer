@@ -103,8 +103,9 @@
             this.menuHelp});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
             this.menuStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.menuStrip.Size = new System.Drawing.Size(1346, 33);
+            this.menuStrip.Size = new System.Drawing.Size(1645, 38);
             this.menuStrip.TabIndex = 1;
             // 
             // menuFile
@@ -116,37 +117,37 @@
             this.toolStripMenuItem3,
             this.menuFileExit});
             this.menuFile.Name = "menuFile";
-            this.menuFile.Size = new System.Drawing.Size(50, 29);
+            this.menuFile.Size = new System.Drawing.Size(56, 34);
             this.menuFile.Text = "&File";
             // 
             // menuFileOpen
             // 
             this.menuFileOpen.Name = "menuFileOpen";
-            this.menuFileOpen.Size = new System.Drawing.Size(141, 30);
+            this.menuFileOpen.Size = new System.Drawing.Size(155, 34);
             this.menuFileOpen.Text = "&Open";
             this.menuFileOpen.Click += new System.EventHandler(this.menuFileOpen_Click);
             // 
             // menuFileSep1
             // 
             this.menuFileSep1.Name = "menuFileSep1";
-            this.menuFileSep1.Size = new System.Drawing.Size(138, 6);
+            this.menuFileSep1.Size = new System.Drawing.Size(152, 6);
             // 
             // menuFileClose
             // 
             this.menuFileClose.Name = "menuFileClose";
-            this.menuFileClose.Size = new System.Drawing.Size(141, 30);
+            this.menuFileClose.Size = new System.Drawing.Size(155, 34);
             this.menuFileClose.Text = "Close";
             this.menuFileClose.Click += new System.EventHandler(this.menuFileClose_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(138, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 6);
             // 
             // menuFileExit
             // 
             this.menuFileExit.Name = "menuFileExit";
-            this.menuFileExit.Size = new System.Drawing.Size(141, 30);
+            this.menuFileExit.Size = new System.Drawing.Size(155, 34);
             this.menuFileExit.Text = "&Exit";
             this.menuFileExit.Click += new System.EventHandler(this.menuFileExit_Click);
             // 
@@ -157,26 +158,26 @@
             this.toolStripMenuItem2,
             this.menuToolsConfiguration});
             this.menuTools.Name = "menuTools";
-            this.menuTools.Size = new System.Drawing.Size(65, 29);
+            this.menuTools.Size = new System.Drawing.Size(72, 34);
             this.menuTools.Text = "Tools";
             // 
             // menuToolsMultiStringSearch
             // 
             this.menuToolsMultiStringSearch.Enabled = false;
             this.menuToolsMultiStringSearch.Name = "menuToolsMultiStringSearch";
-            this.menuToolsMultiStringSearch.Size = new System.Drawing.Size(247, 30);
+            this.menuToolsMultiStringSearch.Size = new System.Drawing.Size(281, 34);
             this.menuToolsMultiStringSearch.Text = "Multi-String Search";
             this.menuToolsMultiStringSearch.Click += new System.EventHandler(this.menuToolsMultiStringSearch_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(244, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(278, 6);
             // 
             // menuToolsConfiguration
             // 
             this.menuToolsConfiguration.Name = "menuToolsConfiguration";
-            this.menuToolsConfiguration.Size = new System.Drawing.Size(247, 30);
+            this.menuToolsConfiguration.Size = new System.Drawing.Size(281, 34);
             this.menuToolsConfiguration.Text = "Configuration";
             this.menuToolsConfiguration.Click += new System.EventHandler(this.menuToolsConfiguration_Click);
             // 
@@ -187,25 +188,25 @@
             this.menuHelpSep1,
             this.menuHelpAbout});
             this.menuHelp.Name = "menuHelp";
-            this.menuHelp.Size = new System.Drawing.Size(61, 29);
+            this.menuHelp.Size = new System.Drawing.Size(68, 34);
             this.menuHelp.Text = "&Help";
             // 
             // menuHelpHelp
             // 
             this.menuHelpHelp.Name = "menuHelpHelp";
-            this.menuHelpHelp.Size = new System.Drawing.Size(147, 30);
+            this.menuHelpHelp.Size = new System.Drawing.Size(161, 34);
             this.menuHelpHelp.Text = "&Help";
             this.menuHelpHelp.Click += new System.EventHandler(this.menuHelpHelp_Click);
             // 
             // menuHelpSep1
             // 
             this.menuHelpSep1.Name = "menuHelpSep1";
-            this.menuHelpSep1.Size = new System.Drawing.Size(144, 6);
+            this.menuHelpSep1.Size = new System.Drawing.Size(158, 6);
             // 
             // menuHelpAbout
             // 
             this.menuHelpAbout.Name = "menuHelpAbout";
-            this.menuHelpAbout.Size = new System.Drawing.Size(147, 30);
+            this.menuHelpAbout.Size = new System.Drawing.Size(161, 34);
             this.menuHelpAbout.Text = "&About";
             this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
             // 
@@ -217,16 +218,17 @@
             this.statusLabelMain,
             this.statusSep1,
             this.statusLabelSearch});
-            this.statusStrip.Location = new System.Drawing.Point(0, 502);
+            this.statusStrip.Location = new System.Drawing.Point(0, 607);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1346, 22);
+            this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 17, 0);
+            this.statusStrip.Size = new System.Drawing.Size(1645, 22);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "statusStrip1";
             // 
             // statusProgress
             // 
             this.statusProgress.Name = "statusProgress";
-            this.statusProgress.Size = new System.Drawing.Size(100, 22);
+            this.statusProgress.Size = new System.Drawing.Size(122, 19);
             this.statusProgress.Visible = false;
             this.statusProgress.Click += new System.EventHandler(this.statusProgress_Click);
             // 
@@ -258,28 +260,28 @@
             this.toolButtonCumulative,
             this.toolStripSeparator1,
             this.toolButtonSearch});
-            this.toolStrip.Location = new System.Drawing.Point(0, 33);
+            this.toolStrip.Location = new System.Drawing.Point(0, 38);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip.Size = new System.Drawing.Size(1346, 33);
+            this.toolStrip.Size = new System.Drawing.Size(1645, 38);
             this.toolStrip.TabIndex = 4;
             this.toolStrip.Text = "toolStrip1";
             // 
             // toolLabelSearch
             // 
             this.toolLabelSearch.Name = "toolLabelSearch";
-            this.toolLabelSearch.Size = new System.Drawing.Size(64, 30);
+            this.toolLabelSearch.Size = new System.Drawing.Size(75, 35);
             this.toolLabelSearch.Text = "Search";
             // 
             // textSearch
             // 
             this.textSearch.Name = "textSearch";
-            this.textSearch.Size = new System.Drawing.Size(500, 33);
+            this.textSearch.Size = new System.Drawing.Size(610, 38);
             // 
             // toolLabelType
             // 
             this.toolLabelType.Name = "toolLabelType";
-            this.toolLabelType.Size = new System.Drawing.Size(49, 30);
+            this.toolLabelType.Size = new System.Drawing.Size(56, 35);
             this.toolLabelType.Text = "Type";
             // 
             // dropdownSearchType
@@ -291,7 +293,7 @@
             "Regex Case Insensitive",
             "Regex Case Sensitive"});
             this.dropdownSearchType.Name = "dropdownSearchType";
-            this.dropdownSearchType.Size = new System.Drawing.Size(250, 33);
+            this.dropdownSearchType.Size = new System.Drawing.Size(305, 38);
             // 
             // toolButtonCumulative
             // 
@@ -302,13 +304,13 @@
             this.toolButtonCumulative.Image = ((System.Drawing.Image)(resources.GetObject("toolButtonCumulative.Image")));
             this.toolButtonCumulative.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolButtonCumulative.Name = "toolButtonCumulative";
-            this.toolButtonCumulative.Size = new System.Drawing.Size(104, 30);
+            this.toolButtonCumulative.Size = new System.Drawing.Size(121, 35);
             this.toolButtonCumulative.Text = "Cumulative";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 33);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 38);
             // 
             // toolButtonSearch
             // 
@@ -316,7 +318,7 @@
             this.toolButtonSearch.Image = ((System.Drawing.Image)(resources.GetObject("toolButtonSearch.Image")));
             this.toolButtonSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolButtonSearch.Name = "toolButtonSearch";
-            this.toolButtonSearch.Size = new System.Drawing.Size(28, 30);
+            this.toolButtonSearch.Size = new System.Drawing.Size(28, 35);
             this.toolButtonSearch.ToolTipText = "Search";
             this.toolButtonSearch.Click += new System.EventHandler(this.toolButtonSearch_Click);
             // 
@@ -324,9 +326,10 @@
             // 
             this.panelMain.Controls.Add(this.listLines);
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelMain.Location = new System.Drawing.Point(0, 66);
+            this.panelMain.Location = new System.Drawing.Point(0, 76);
+            this.panelMain.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(1346, 436);
+            this.panelMain.Size = new System.Drawing.Size(1645, 531);
             this.panelMain.TabIndex = 5;
             // 
             // listLines
@@ -350,6 +353,7 @@
             this.listLines.HideSelection = false;
             this.listLines.IsSearchOnSortColumn = false;
             this.listLines.Location = new System.Drawing.Point(0, 0);
+            this.listLines.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.listLines.Name = "listLines";
             this.listLines.SelectColumnsMenuStaysOpen = false;
             this.listLines.SelectColumnsOnRightClick = false;
@@ -357,7 +361,7 @@
             this.listLines.ShowFilterMenuOnRightClick = false;
             this.listLines.ShowGroups = false;
             this.listLines.ShowSortIndicators = false;
-            this.listLines.Size = new System.Drawing.Size(1346, 436);
+            this.listLines.Size = new System.Drawing.Size(1645, 531);
             this.listLines.TabIndex = 0;
             this.listLines.TriggerCellOverEventsWhenOverHeader = false;
             this.listLines.UseCompatibleStateImageBehavior = false;
@@ -393,7 +397,7 @@
             this.contextLines});
             this.contextMenu.Name = "contextMenu";
             this.contextMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.contextMenu.Size = new System.Drawing.Size(161, 178);
+            this.contextMenu.Size = new System.Drawing.Size(161, 198);
             this.contextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // contextMenuFilter
@@ -404,32 +408,32 @@
             this.toolStripMenuItem1,
             this.contextMenuFilterClear});
             this.contextMenuFilter.Name = "contextMenuFilter";
-            this.contextMenuFilter.Size = new System.Drawing.Size(160, 30);
+            this.contextMenuFilter.Size = new System.Drawing.Size(160, 34);
             this.contextMenuFilter.Text = "Filtering";
             // 
             // contextMenuFilterShowMatched
             // 
             this.contextMenuFilterShowMatched.Name = "contextMenuFilterShowMatched";
-            this.contextMenuFilterShowMatched.Size = new System.Drawing.Size(215, 30);
+            this.contextMenuFilterShowMatched.Size = new System.Drawing.Size(241, 34);
             this.contextMenuFilterShowMatched.Text = "Show matched";
             this.contextMenuFilterShowMatched.Click += new System.EventHandler(this.contextMenuFilterShowMatched_Click);
             // 
             // contextMenuFilterHideMatched
             // 
             this.contextMenuFilterHideMatched.Name = "contextMenuFilterHideMatched";
-            this.contextMenuFilterHideMatched.Size = new System.Drawing.Size(215, 30);
+            this.contextMenuFilterHideMatched.Size = new System.Drawing.Size(241, 34);
             this.contextMenuFilterHideMatched.Text = "Hide matched";
             this.contextMenuFilterHideMatched.Click += new System.EventHandler(this.contextMenuFilterHideMatched_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(212, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(238, 6);
             // 
             // contextMenuFilterClear
             // 
             this.contextMenuFilterClear.Name = "contextMenuFilterClear";
-            this.contextMenuFilterClear.Size = new System.Drawing.Size(215, 30);
+            this.contextMenuFilterClear.Size = new System.Drawing.Size(241, 34);
             this.contextMenuFilterClear.Text = "Clear";
             this.contextMenuFilterClear.Click += new System.EventHandler(this.contextMenuFilterClear_Click);
             // 
@@ -445,20 +449,20 @@
             this.toolStripMenuItem4,
             this.contextMenuSearchColour});
             this.contextMenuSearch.Name = "contextMenuSearch";
-            this.contextMenuSearch.Size = new System.Drawing.Size(160, 30);
+            this.contextMenuSearch.Size = new System.Drawing.Size(160, 34);
             this.contextMenuSearch.Text = "Search";
             // 
             // contextMenuSearchViewTerms
             // 
             this.contextMenuSearchViewTerms.Name = "contextMenuSearchViewTerms";
-            this.contextMenuSearchViewTerms.Size = new System.Drawing.Size(185, 30);
+            this.contextMenuSearchViewTerms.Size = new System.Drawing.Size(208, 34);
             this.contextMenuSearchViewTerms.Text = "View Terms";
             this.contextMenuSearchViewTerms.Click += new System.EventHandler(this.contextMenuSearchViewTerms_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(182, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(205, 6);
             // 
             // contextMenuSearchColour
             // 
@@ -466,20 +470,20 @@
             this.contextMenuSearchMatch,
             this.contextMenuSearchColourContext});
             this.contextMenuSearchColour.Name = "contextMenuSearchColour";
-            this.contextMenuSearchColour.Size = new System.Drawing.Size(185, 30);
+            this.contextMenuSearchColour.Size = new System.Drawing.Size(208, 34);
             this.contextMenuSearchColour.Text = "Colour";
             // 
             // contextMenuSearchMatch
             // 
             this.contextMenuSearchMatch.Name = "contextMenuSearchMatch";
-            this.contextMenuSearchMatch.Size = new System.Drawing.Size(158, 30);
+            this.contextMenuSearchMatch.Size = new System.Drawing.Size(176, 34);
             this.contextMenuSearchMatch.Text = "Match";
             this.contextMenuSearchMatch.Click += new System.EventHandler(this.contextMenuSearchColourMatch_Click);
             // 
             // contextMenuSearchColourContext
             // 
             this.contextMenuSearchColourContext.Name = "contextMenuSearchColourContext";
-            this.contextMenuSearchColourContext.Size = new System.Drawing.Size(158, 30);
+            this.contextMenuSearchColourContext.Size = new System.Drawing.Size(176, 34);
             this.contextMenuSearchColourContext.Text = "Context";
             this.contextMenuSearchColourContext.Click += new System.EventHandler(this.contextMenuSearchColourContext_Click);
             // 
@@ -494,20 +498,20 @@
             this.contextMenuExportAll,
             this.contextMenuExportSelected});
             this.contextMenuExport.Name = "contextMenuExport";
-            this.contextMenuExport.Size = new System.Drawing.Size(160, 30);
+            this.contextMenuExport.Size = new System.Drawing.Size(160, 34);
             this.contextMenuExport.Text = "Export";
             // 
             // contextMenuExportAll
             // 
             this.contextMenuExportAll.Name = "contextMenuExportAll";
-            this.contextMenuExportAll.Size = new System.Drawing.Size(163, 30);
+            this.contextMenuExportAll.Size = new System.Drawing.Size(182, 34);
             this.contextMenuExportAll.Text = "All";
             this.contextMenuExportAll.Click += new System.EventHandler(this.contextMenuExportAll_Click);
             // 
             // contextMenuExportSelected
             // 
             this.contextMenuExportSelected.Name = "contextMenuExportSelected";
-            this.contextMenuExportSelected.Size = new System.Drawing.Size(163, 30);
+            this.contextMenuExportSelected.Size = new System.Drawing.Size(182, 34);
             this.contextMenuExportSelected.Text = "Selected";
             this.contextMenuExportSelected.Click += new System.EventHandler(this.contextMenuExportSelected_Click);
             // 
@@ -519,7 +523,7 @@
             // contextMenuCopy
             // 
             this.contextMenuCopy.Name = "contextMenuCopy";
-            this.contextMenuCopy.Size = new System.Drawing.Size(160, 30);
+            this.contextMenuCopy.Size = new System.Drawing.Size(160, 34);
             this.contextMenuCopy.Text = "Copy";
             this.contextMenuCopy.Click += new System.EventHandler(this.contextMenuCopy_Click);
             // 
@@ -535,42 +539,43 @@
             this.contextLinesGoToFirstLine,
             this.contextLinesGoToLastLine});
             this.contextLines.Name = "contextLines";
-            this.contextLines.Size = new System.Drawing.Size(160, 30);
+            this.contextLines.Size = new System.Drawing.Size(160, 34);
             this.contextLines.Text = "Lines";
             // 
             // contextLinesGoToLine
             // 
             this.contextLinesGoToLine.Name = "contextLinesGoToLine";
-            this.contextLinesGoToLine.Size = new System.Drawing.Size(217, 30);
+            this.contextLinesGoToLine.Size = new System.Drawing.Size(245, 34);
             this.contextLinesGoToLine.Text = "Go To Line";
             this.contextLinesGoToLine.Click += new System.EventHandler(this.contextLinesGoToLine_Click);
             // 
             // contextLinesGoToFirstLine
             // 
             this.contextLinesGoToFirstLine.Name = "contextLinesGoToFirstLine";
-            this.contextLinesGoToFirstLine.Size = new System.Drawing.Size(217, 30);
+            this.contextLinesGoToFirstLine.Size = new System.Drawing.Size(245, 34);
             this.contextLinesGoToFirstLine.Text = "Go To First Line";
             this.contextLinesGoToFirstLine.Click += new System.EventHandler(this.contextLinesGoToFirstLine_Click);
             // 
             // contextLinesGoToLastLine
             // 
             this.contextLinesGoToLastLine.Name = "contextLinesGoToLastLine";
-            this.contextLinesGoToLastLine.Size = new System.Drawing.Size(217, 30);
+            this.contextLinesGoToLastLine.Size = new System.Drawing.Size(245, 34);
             this.contextLinesGoToLastLine.Text = "Go To Last Line";
             this.contextLinesGoToLastLine.Click += new System.EventHandler(this.contextLinesGoToLastLine_Click);
             // 
             // FormMain
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1346, 524);
+            this.ClientSize = new System.Drawing.Size(1645, 629);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LogViewer";
