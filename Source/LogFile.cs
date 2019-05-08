@@ -321,6 +321,12 @@ namespace LogViewer
 
                             ClearContextLine(ll.LineNumber, numContextLines);
                         }
+                        else
+                        {
+                            if (ll.SearchMatches.Count > 0) {
+                                continue;
+                            }
+                        }
 
                         line = this.GetLine(ll.LineNumber);
 

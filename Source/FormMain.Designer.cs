@@ -327,7 +327,7 @@
             this.panelMain.Controls.Add(this.listLines);
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(0, 76);
-            this.panelMain.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelMain.Margin = new System.Windows.Forms.Padding(4);
             this.panelMain.Name = "panelMain";
             this.panelMain.Size = new System.Drawing.Size(1645, 531);
             this.panelMain.TabIndex = 5;
@@ -353,7 +353,7 @@
             this.listLines.HideSelection = false;
             this.listLines.IsSearchOnSortColumn = false;
             this.listLines.Location = new System.Drawing.Point(0, 0);
-            this.listLines.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.listLines.Margin = new System.Windows.Forms.Padding(4);
             this.listLines.Name = "listLines";
             this.listLines.SelectColumnsMenuStaysOpen = false;
             this.listLines.SelectColumnsOnRightClick = false;
@@ -575,7 +575,7 @@
             this.Controls.Add(this.menuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LogViewer";
