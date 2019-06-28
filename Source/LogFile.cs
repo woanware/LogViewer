@@ -1,11 +1,15 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace LogViewer
 {
@@ -16,7 +20,7 @@ namespace LogViewer
     {
         #region Delegates
         public delegate void SearchCompleteEvent(TimeSpan duration, long matches, int numSearchTerms, bool cancelled);
-        public delegate void CompleteEvent(TimeSpan duration, bool cancelled);
+        public delegate void CompleteEvent(LogFile lf, TimeSpan duration, bool cancelled);
         public delegate void BoolEvent(bool val);
         public delegate void DefaultEvent();
         public delegate void MessageEvent(string message);
@@ -31,19 +35,29 @@ namespace LogViewer
         public event MessageEvent LoadError;
         #endregion
 
+        private Color highlightColour = Color.Lime;
+        private Color contextColour = Color.LightGray;
+
         #region Member Variables
+       
         public List<LogLine> Lines { get; private set; } = new List<LogLine>();
         public LogLine LongestLine { get; private set; } = new LogLine();
         public int LineCount { get; private set; } = 0;
         private FileStream fileStream;
         private Mutex readMutex = new Mutex();
+        private string filePath;
+        public List<ushort> FilterIds { get; private set; }  = new List<ushort>();
+        public FastObjectListView List { get; set; }
+        public string Guid { get; private set; }
         #endregion
 
         /// <summary>
         /// 
         /// </summary>
-        public LogFile()
+        public LogFile(string filePath)
         {
+            this.filePath = filePath;
+            this.Guid = System.Guid.NewGuid().ToString();
         }
 
         #region Public Methods
@@ -52,7 +66,7 @@ namespace LogViewer
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="ct"></param>
-        public void Load(string filePath, CancellationToken ct)
+        public void Load(SynchronizationContext st, CancellationToken ct)
         {
             Task.Run(() => {
 
@@ -178,6 +192,28 @@ namespace LogViewer
                         DateTime end = DateTime.Now;
 
                         OnProgressUpdate(100);
+
+                        st.Post(new SendOrPostCallback(o =>
+                        {
+                            this.List.SetObjects(this.Lines);
+
+                            // Try and measure the length of the longest line in pixels
+                            // This is rough, and tends to be too short, but cannot find
+                            // another method to make column wide enough :-)
+                            using (var image = new Bitmap(1, 1))
+                            {
+                                using (var g = Graphics.FromImage(image))
+                                {
+                                    string temp = this.GetLine(this.LongestLine.LineNumber);
+                                    var result = g.MeasureString(temp, new Font("Consolas", 9, FontStyle.Regular, GraphicsUnit.Pixel));
+                                    this.List.Columns[1].Width = Convert.ToInt32(result.Width + 100);
+                                }
+                            }
+
+                            this.List.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);                         
+
+                        }), null);
+
                         OnLoadComplete(end - start, cancelled);
                     }                   
                 }
@@ -424,6 +460,110 @@ namespace LogViewer
         }
         #endregion
 
+        public TabPage Initialise()
+        {
+            OLVColumn colLineNumber = ((OLVColumn)(new OLVColumn()));
+            OLVColumn colText = ((OLVColumn)(new OLVColumn()));
+
+            colLineNumber.Text = "Line No.";
+            colLineNumber.Width = 95;
+            colText.Text = "Data";
+
+            colLineNumber.AspectGetter = delegate (object x)
+            {
+                if (((LogLine)x) == null)
+                {
+                    return "";
+                }
+
+                return (((LogLine)x).LineNumber + 1);
+            };
+
+            colText.AspectGetter = delegate (object x)
+            {
+                if (((LogLine)x) == null)
+                {
+                    return "";
+                }
+
+                return (this.GetLine(((LogLine)x).LineNumber));
+            };
+
+            FastObjectListView lv = new FastObjectListView();
+
+            lv.AllColumns.Add(colLineNumber);
+            lv.AllColumns.Add(colText);
+            lv.AllowDrop = true;
+            lv.AutoArrange = false;
+            lv.CausesValidation = false;
+            lv.CellEditUseWholeCell = false;
+            lv.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            colLineNumber,
+            colText});
+            //lv.ContextMenuStrip = this.contextMenu;
+            lv.Dock = System.Windows.Forms.DockStyle.Fill;
+            lv.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            lv.FullRowSelect = true;
+            lv.GridLines = true;
+            lv.HasCollapsibleGroups = false;
+            lv.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            lv.HideSelection = false;
+            lv.IsSearchOnSortColumn = false;
+            lv.Location = new System.Drawing.Point(3, 3);
+            lv.Margin = new System.Windows.Forms.Padding(4);
+            lv.Name = "listLines0";
+            lv.SelectColumnsMenuStaysOpen = false;
+            lv.SelectColumnsOnRightClick = false;
+            lv.SelectColumnsOnRightClickBehaviour = BrightIdeasSoftware.ObjectListView.ColumnSelectBehaviour.None;
+            lv.ShowFilterMenuOnRightClick = false;
+            lv.ShowGroups = false;
+            lv.ShowSortIndicators = false;
+            lv.Size = new System.Drawing.Size(1679, 940);
+            lv.TabIndex = 1;
+            lv.TriggerCellOverEventsWhenOverHeader = false;
+            lv.UseCompatibleStateImageBehavior = false;
+            lv.UseFiltering = true;
+            lv.View = System.Windows.Forms.View.Details;
+            lv.VirtualMode = true;
+            lv.Tag = this.Guid;
+            lv.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.FormatRow);
+
+            this.List = lv;
+
+            TabPage tp = new TabPage();
+            tp.Controls.Add(lv);
+            tp.Location = new System.Drawing.Point(4, 33);
+            tp.Name = "tabPage1";
+            tp.Padding = new System.Windows.Forms.Padding(3);
+            tp.Size = new System.Drawing.Size(1685, 946);
+            tp.TabIndex = 0;
+            tp.Text = "tabPage1";
+            tp.UseVisualStyleBackColor = true;
+
+            return tp;
+        }
+
+
+        public void FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
+        {
+            //if (this.viewMode != Global.ViewMode.FilterHide)
+            //{
+            if ((LogLine)e.Model == null)
+            {
+                return;
+            }
+
+            if (((LogLine)e.Model).SearchMatches.Intersect(this.FilterIds).Any() == true)
+            {
+                e.Item.BackColor = highlightColour;
+            }
+            else if (((LogLine)e.Model).IsContextLine == true)
+            {
+                e.Item.BackColor = contextColour;
+            }
+            //}            
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -575,25 +715,25 @@ namespace LogViewer
         /// </summary>
         /// <param name="lineNumber"></param>
         /// <returns></returns>
-        public byte[] GetLineBytes(int lineNumber)
-        {
-            if (lineNumber >= this.Lines.Count)
-            {
-                return new byte[]{};
-            }
+        //public byte[] GetLineBytes(int lineNumber)
+        //{
+        //    if (lineNumber >= this.Lines.Count)
+        //    {
+        //        return new byte[]{};
+        //    }
 
-            byte[] buffer = new byte[this.Lines[lineNumber].CharCount + 1];
-            try
-            {
-                this.readMutex.WaitOne();
-                this.fileStream.Seek(this.Lines[lineNumber].Offset, SeekOrigin.Begin);
-                this.fileStream.Read(buffer, 0, this.Lines[lineNumber].CharCount);
-                this.readMutex.ReleaseMutex();
-            }
-            catch (Exception) { }
+        //    byte[] buffer = new byte[this.Lines[lineNumber].CharCount + 1];
+        //    try
+        //    {
+        //        this.readMutex.WaitOne();
+        //        this.fileStream.Seek(this.Lines[lineNumber].Offset, SeekOrigin.Begin);
+        //        this.fileStream.Read(buffer, 0, this.Lines[lineNumber].CharCount);
+        //        this.readMutex.ReleaseMutex();
+        //    }
+        //    catch (Exception) { }
 
-            return buffer;
-        }
+        //    return buffer;
+        //}
 
         #region Event Methods
         /// <summary>
@@ -628,7 +768,7 @@ namespace LogViewer
             var handler = LoadComplete;
             if (handler != null)
             {
-                handler(duration, cancelled);
+                handler(this, duration, cancelled);
             }
         }
 
@@ -640,7 +780,7 @@ namespace LogViewer
             var handler = ExportComplete;
             if (handler != null)
             {
-                handler(duration, cancelled);
+                handler(this, duration, cancelled);
             }
         }
 

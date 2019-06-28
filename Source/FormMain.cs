@@ -16,17 +16,17 @@ namespace LogViewer
     public partial class FormMain : Form
     {
         #region Member Variables
-        private LogFile lf;
-        private Searches searches;
-        private HourGlass hourGlass;
         private readonly SynchronizationContext synchronizationContext;
         private CancellationTokenSource cancellationTokenSource;
-        private List<ushort> filterIds;
+        private Searches searches;
+        private HourGlass hourGlass;        
         private bool processing;
         private Color highlightColour = Color.Lime;
         private Color contextColour = Color.LightGray;
         private Configuration config;
         private Global.ViewMode viewMode = Global.ViewMode.Standard;
+        private Dictionary<string, LogFile> logs;
+        private int currentTabIndex = -1;
         #endregion
 
         #region Constructor
@@ -39,8 +39,8 @@ namespace LogViewer
 
             synchronizationContext = SynchronizationContext.Current;
             dropdownSearchType.SelectedIndex = 0;
-            searches = new Searches();
-            filterIds = new List<ushort>();
+            logs = new Dictionary<string, LogFile>();
+            searches = new Searches();            
         }
         #endregion
 
@@ -62,25 +62,25 @@ namespace LogViewer
             this.highlightColour = config.GetHighlightColour();
             this.contextColour = config.GetContextColour();
 
-            this.olvcLineNumber.AspectGetter = delegate (object x)
-            {
-                if (((LogLine)x) == null )
-                {
-                    return "";
-                }
+            //this.olvcLineNumber.AspectGetter = delegate (object x)
+            //{
+            //    if (((LogLine)x) == null )
+            //    {
+            //        return "";
+            //    }
 
-                return (((LogLine)x).LineNumber + 1);
-            };
+            //    return (((LogLine)x).LineNumber + 1);
+            //};
 
-            this.olvcText.AspectGetter = delegate (object x)
-            {
-                if (((LogLine)x) == null)
-                {
-                    return "";
-                }
+            //this.olvcText.AspectGetter = delegate (object x)
+            //{
+            //    if (((LogLine)x) == null)
+            //    {
+            //        return "";
+            //    }
 
-                return (lf.GetLine(((LogLine)x).LineNumber));
-            };
+            //    return (lf.GetLine(((LogLine)x).LineNumber));
+            //};
 
             menuFileClose.Enabled = false;
         }
@@ -124,7 +124,7 @@ namespace LogViewer
                 return;
             }
 
-            LoadFile(files[0]);
+           // LoadFile(files[0]);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace LogViewer
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        private void LoadFile(string filePath)
+        private void LoadFile(string filePath, bool newTab)
         {
             this.processing = true;
             this.hourGlass = new HourGlass(this);
@@ -166,31 +166,48 @@ namespace LogViewer
             menuToolsMultiStringSearch.Enabled = true;
 
             // Clear any existing filters/reset values
-            this.listLines.ModelFilter = null;
+           // this.listLines0.ModelFilter = null;
             this.viewMode = Global.ViewMode.Standard;
             this.searches = new Searches();
-            this.filterIds.Clear();
 
-            if (lf != null)
+            if (newTab == true)
             {
-                listLines.ClearObjects();
-                lf.ProgressUpdate -= LogFile_LoadProgress;
-                lf.LoadComplete -= LogFile_LoadComplete;
-                lf.SearchComplete -= LogFile_SearchComplete;
-                lf.ExportComplete -= LogFile_ExportComplete;
-                lf.LoadError -= LogFile_LoadError;
-                lf.Dispose();
+                LogFile lf = new LogFile(filePath);
+                logs.Add(lf.Guid, lf);
+           
+                tabControl.TabPages.Add(lf.Initialise());
+
+                lf.ProgressUpdate += LogFile_LoadProgress;
+                lf.LoadComplete += LogFile_LoadComplete;
+                lf.SearchComplete += LogFile_SearchComplete;
+                lf.ExportComplete += LogFile_ExportComplete;
+                lf.LoadError += LogFile_LoadError;
+                lf.Load(synchronizationContext, cancellationTokenSource.Token);
+            } 
+            else
+            {
+                // Get the current selected log file
             }
+            
 
-            this.Text = "LogViewer - " + filePath;
 
-            lf = new LogFile();
-            lf.ProgressUpdate += LogFile_LoadProgress;
-            lf.LoadComplete += LogFile_LoadComplete;
-            lf.SearchComplete += LogFile_SearchComplete;
-            lf.ExportComplete += LogFile_ExportComplete;
-            lf.LoadError += LogFile_LoadError;
-            lf.Load(filePath, cancellationTokenSource.Token);        
+
+            //this.filterIds.Clear();
+
+            //if (lf != null)
+            //{
+            //    listLines.ClearObjects();
+            //    lf.ProgressUpdate -= LogFile_LoadProgress;
+            //    lf.LoadComplete -= LogFile_LoadComplete;
+            //    lf.SearchComplete -= LogFile_SearchComplete;
+            //    lf.ExportComplete -= LogFile_ExportComplete;
+            //    lf.LoadError -= LogFile_LoadError;
+            //    lf.Dispose();
+            //}
+
+           // this.Text = "LogViewer - " + filePath;
+
+                
         }
 
         /// <summary>
@@ -210,15 +227,24 @@ namespace LogViewer
                 return;
             }
 
-            // Add the ID so that any matches show up straight away
-            filterIds.Add(sc.Id);
+            //if (logs.ContainsKey(currentTabIndex) == false)
+            //{
+            //    UserInterface.DisplayMessageBox(this, "Log file not available", MessageBoxIcon.Exclamation);
+            //    return;
+            //}
+
+            //// Add the ID so that any matches show up straight away
+            //logs[currentTabIndex].FilterIds.Add(sc.Id);
+            
+            //filterIds.Add(sc.Id);
 
             this.processing = true;
             this.hourGlass = new HourGlass(this);
             SetProcessingState(false);
             statusProgress.Visible = true;
-            this.cancellationTokenSource = new CancellationTokenSource();
-            lf.Search(sc, toolButtonCumulative.Checked, cancellationTokenSource.Token, config.NumContextLines);
+           // this.cancellationTokenSource = new CancellationTokenSource();
+            //lf.Search(sc, toolButtonCumulative.Checked, cancellationTokenSource.Token, config.NumContextLines);
+           // logs[currentTabIndex].Search(sc, toolButtonCumulative.Checked, cancellationTokenSource.Token, config.NumContextLines);
         }
 
         /// <summary>
@@ -231,16 +257,16 @@ namespace LogViewer
             this.hourGlass = new HourGlass(this);
             SetProcessingState(false);
             statusProgress.Visible = true;
-            this.cancellationTokenSource = new CancellationTokenSource();
+           // this.cancellationTokenSource = new CancellationTokenSource();
 
-            if (listLines.ModelFilter == null)
-            {
-                lf.Export(filePath, cancellationTokenSource.Token);
-            }
-            else
-            {
-                lf.Export(listLines.FilteredObjects, filePath, cancellationTokenSource.Token);
-            }            
+            //if (listLines.ModelFilter == null)
+            //{
+            //    lf.Export(filePath, cancellationTokenSource.Token);
+            //}
+            //else
+            //{
+            //    lf.Export(listLines.FilteredObjects, filePath, cancellationTokenSource.Token);
+            //}            
         }
 
         /// <summary>
@@ -253,9 +279,9 @@ namespace LogViewer
             this.hourGlass = new HourGlass(this);
             SetProcessingState(false);
             statusProgress.Visible = true;
-            this.cancellationTokenSource = new CancellationTokenSource();
+          //  this.cancellationTokenSource = new CancellationTokenSource();
 
-            lf.Export(listLines.SelectedObjects, filePath, cancellationTokenSource.Token);
+            //lf.Export(listLines.SelectedObjects, filePath, cancellationTokenSource.Token);
         }
         #endregion
 
@@ -268,19 +294,19 @@ namespace LogViewer
         {
             UserInterface.DisplayErrorMessageBox(this, message);
 
-            synchronizationContext.Post(new SendOrPostCallback(o =>
-            {
-                this.Text = "LogViewer";
-                statusProgress.Visible = false;
-                this.hourGlass.Dispose();
-                SetProcessingState(true);
-                this.cancellationTokenSource.Dispose();               
-                this.processing = false;
+            //synchronizationContext.Post(new SendOrPostCallback(o =>
+            //{
+            //    this.Text = "LogViewer";
+            //    statusProgress.Visible = false;
+            //    this.hourGlass.Dispose();
+            //    SetProcessingState(true);
+            //    this.cancellationTokenSource.Dispose();               
+            //    this.processing = false;
 
-                // Lets clear the LogFile state and set the UI correctly
-                menuFileClose_Click(this, null);
+            //    // Lets clear the LogFile state and set the UI correctly
+            //    menuFileClose_Click(this, null);
 
-            }), null);        
+            //}), null);        
         }
 
         /// <summary>
@@ -300,59 +326,43 @@ namespace LogViewer
         /// </summary>
         private void LogFile_SearchComplete(TimeSpan duration, long matches, int numTerms, bool cancelled)
         {
-            synchronizationContext.Post(new SendOrPostCallback(o =>
-            {
-                statusProgress.Visible = false;
-                listLines.Refresh();
-                this.hourGlass.Dispose();
-                SetProcessingState(true);
-                this.cancellationTokenSource.Dispose();
-                UpdateStatusLabel("Matched " + matches + " lines (Search Terms: " + numTerms + ") # Duration: " + duration, statusLabelSearch);
-                this.processing = false;
+            //synchronizationContext.Post(new SendOrPostCallback(o =>
+            //{
+            //    statusProgress.Visible = false;
+            //    listLines0.Refresh();
+            //    this.hourGlass.Dispose();
+            //    SetProcessingState(true);
+            //    this.cancellationTokenSource.Dispose();
+            //    UpdateStatusLabel("Matched " + matches + " lines (Search Terms: " + numTerms + ") # Duration: " + duration, statusLabelSearch);
+            //    this.processing = false;
 
-            }), null);
+            //}), null);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="val"></param>
-        private void LogFile_ExportComplete(TimeSpan duration, bool val)
+        private void LogFile_ExportComplete(LogFile lf, TimeSpan duration, bool val)
         {
-            synchronizationContext.Post(new SendOrPostCallback(o =>
-            {
-                statusProgress.Visible = false;
-                this.hourGlass.Dispose();
-                SetProcessingState(true);
-                this.cancellationTokenSource.Dispose();
-                UpdateStatusLabel("Export complete # Duration: " + duration, statusLabelSearch);
-                this.processing = false;               
-            }), null);
+            //synchronizationContext.Post(new SendOrPostCallback(o =>
+            //{
+            //    statusProgress.Visible = false;
+            //    this.hourGlass.Dispose();
+            //    SetProcessingState(true);
+            //    this.cancellationTokenSource.Dispose();
+            //    UpdateStatusLabel("Export complete # Duration: " + duration, statusLabelSearch);
+            //    this.processing = false;               
+            //}), null);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void LogFile_LoadComplete(TimeSpan duration, bool cancelled)
+        private void LogFile_LoadComplete(LogFile lf, TimeSpan duration, bool cancelled)
         {
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
-                listLines.SetObjects(lf.Lines);
-
-                // Try and measure the length of the longest line in pixels
-                // This is rough, and tends to be too short, but cannot find
-                // another method to make column wide enough :-)
-                using (var image = new Bitmap(1, 1))
-                {
-                    using (var g = Graphics.FromImage(image))
-                    {
-                        string temp = lf.GetLine(lf.LongestLine.LineNumber);
-                        var result = g.MeasureString(temp, new Font("Consolas", 9, FontStyle.Regular, GraphicsUnit.Pixel));
-                        olvcText.Width = Convert.ToInt32(result.Width);
-                    }
-                }
-
-                olvcLineNumber.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
                 statusProgress.Visible = false;
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
@@ -361,8 +371,9 @@ namespace LogViewer
                 UpdateStatusLabel("", statusLabelSearch);
                 this.processing = false;
                 menuFileClose.Enabled = true;
+                menuFileOpen.Enabled = true; // Enable the standard file open, since we can now open in an existing tab, since at least one tab exists
 
-            }), null);           
+            }), null);
         }
         #endregion
 
@@ -372,25 +383,25 @@ namespace LogViewer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void listLines_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
-        {
-            //if (this.viewMode != Global.ViewMode.FilterHide)
-            //{
-                if ((LogLine)e.Model == null)
-                {
-                    return;
-                }
+        //private void listLines_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
+        //{
+        //    ////if (this.viewMode != Global.ViewMode.FilterHide)
+        //   // //{
+        //        //if ((LogLine)e.Model == null)
+        //        //{
+        //        //    return;
+        //        //}
 
-                if (((LogLine)e.Model).SearchMatches.Intersect(filterIds).Any() == true)
-                {
-                    e.Item.BackColor = highlightColour;
-                }
-                else if (((LogLine)e.Model).IsContextLine == true)
-                {
-                    e.Item.BackColor = contextColour;
-                }
-            //}            
-        }
+        //        //if (((LogLine)e.Model).SearchMatches.Intersect(filterIds).Any() == true)
+        //        //{
+        //        //    e.Item.BackColor = highlightColour;
+        //        //}
+        //        //else if (((LogLine)e.Model).IsContextLine == true)
+        //        //{
+        //        //    e.Item.BackColor = contextColour;
+        //        //}
+        //   // //}            
+        //}
 
         /// <summary>
         /// 
@@ -437,8 +448,8 @@ namespace LogViewer
                 UserInterface.DisplayMessageBox(this, "Only one file can be processed at one time", MessageBoxIcon.Exclamation);
                 return;
             }
-
-            LoadFile(files[0]);
+///
+   //         LoadFile(files[0]);
         }
 
         /// <summary>
@@ -448,16 +459,16 @@ namespace LogViewer
         /// <param name="e"></param>
         private void listLines_ItemActivate(object sender, EventArgs e)
         {
-            if (listLines.SelectedObjects.Count != 1)
-            {
-                return;
-            }
+            //if (listLines0.SelectedObjects.Count != 1)
+            //{
+            //    return;
+            //}
 
-            LogLine ll = (LogLine)listLines.SelectedObjects[0];
-            using (FormLine f = new FormLine(this.lf.GetLine(ll.LineNumber)))
-            {
-                f.ShowDialog(this);
-            }
+            //LogLine ll = (LogLine)listLines0.SelectedObjects[0];
+            //using (FormLine f = new FormLine(this.lf.GetLine(ll.LineNumber)))
+            //{
+            //    f.ShowDialog(this);
+            //}
         }
         #endregion
 
@@ -469,21 +480,21 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuFilterClear_Click(object sender, EventArgs e)
         {
-            // Get the currently selected row
-            var ll = (LogLine)listLines.SelectedObject;
+            //// Get the currently selected row
+            //var ll = (LogLine)listLines0.SelectedObject;
 
-            this.listLines.ModelFilter = null;
-            this.viewMode = Global.ViewMode.Standard;
+            //this.listLines0.ModelFilter = null;
+            //this.viewMode = Global.ViewMode.Standard;
 
-            if (ll != null)
-            {
-                listLines.EnsureVisible(ll.LineNumber - 1);
-                listLines.SelectedIndex = ll.LineNumber - 1;
-                if (listLines.SelectedItem != null)
-                {
-                    listLines.FocusedItem = listLines.SelectedItem;
-                }
-            }
+            //if (ll != null)
+            //{
+            //    listLines0.EnsureVisible(ll.LineNumber - 1);
+            //    listLines0.SelectedIndex = ll.LineNumber - 1;
+            //    if (listLines0.SelectedItem != null)
+            //    {
+            //        listLines0.FocusedItem = listLines0.SelectedItem;
+            //    }
+            //}
         }
 
         /// <summary>
@@ -493,10 +504,10 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuFilterShowMatched_Click(object sender, EventArgs e)
         {
-            this.viewMode = Global.ViewMode.FilterShow;
-            this.listLines.ModelFilter = new ModelFilter(delegate (object x) {
-                return x != null && (((LogLine)x).SearchMatches.Intersect(filterIds).Any() == true || (((LogLine)x).IsContextLine == true));
-            });
+            //this.viewMode = Global.ViewMode.FilterShow;
+            //this.listLines0.ModelFilter = new ModelFilter(delegate (object x) {
+            //    return x != null && (((LogLine)x).SearchMatches.Intersect(filterIds).Any() == true || (((LogLine)x).IsContextLine == true));
+            //});
         }
 
         /// <summary>
@@ -506,10 +517,10 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuFilterHideMatched_Click(object sender, EventArgs e)
         {
-            this.viewMode = Global.ViewMode.FilterHide;
-            this.listLines.ModelFilter = new ModelFilter(delegate (object x) {
-                return x != null && (((LogLine)x).SearchMatches.Intersect(filterIds).Any() == false);
-            });
+            //this.viewMode = Global.ViewMode.FilterHide;
+            //this.listLines0.ModelFilter = new ModelFilter(delegate (object x) {
+            //    return x != null && (((LogLine)x).SearchMatches.Intersect(filterIds).Any() == false);
+            //});
         }
 
         /// <summary>
@@ -519,29 +530,29 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuSearchViewTerms_Click(object sender, EventArgs e)
         {
-            using (FormSearchTerms f = new FormSearchTerms(this.searches))
-            {
-                DialogResult dr = f.ShowDialog(this);
-                if (dr == DialogResult.Cancel)
-                {
-                    return;
-                }
+            //using (FormSearchTerms f = new FormSearchTerms(this.searches))
+            //{
+            //    DialogResult dr = f.ShowDialog(this);
+            //    if (dr == DialogResult.Cancel)
+            //    {
+            //        return;
+            //    }
 
-                this.searches = f.Searches;
+            //    this.searches = f.Searches;
 
-                filterIds.Clear();
-                foreach (SearchCriteria sc in searches.Items)
-                {
-                    if (sc.Enabled == false)
-                    {
-                        continue;
-                    }
+            //    filterIds.Clear();
+            //    foreach (SearchCriteria sc in searches.Items)
+            //    {
+            //        if (sc.Enabled == false)
+            //        {
+            //            continue;
+            //        }
 
-                    filterIds.Add(sc.Id);
-                }
+            //        filterIds.Add(sc.Id);
+            //    }
 
-                listLines.Refresh();
-            }
+            //    listLines0.Refresh();
+            //}
 
         }
 
@@ -560,7 +571,7 @@ namespace LogViewer
             }
 
             this.highlightColour = cd.Color;
-            listLines.Refresh();
+           // listLines0.Refresh();
         }
 
         /// <summary>
@@ -578,7 +589,7 @@ namespace LogViewer
             }
 
             this.contextColour = cd.Color;
-            listLines.Refresh();
+           // listLines0.Refresh();
         }
 
         /// <summary>
@@ -628,13 +639,13 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuCopy_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (LogLine ll in listLines.SelectedObjects)
-            {
-                sb.AppendLine(lf.GetLine(ll.LineNumber));
-            }
+            //StringBuilder sb = new StringBuilder();
+            //foreach (LogLine ll in listLines0.SelectedObjects)
+            //{
+            //    sb.AppendLine(lf.GetLine(ll.LineNumber));
+            //}
 
-            Clipboard.SetText(sb.ToString());
+            //Clipboard.SetText(sb.ToString());
         }
 
         /// <summary>
@@ -644,25 +655,25 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextLinesGoToLine_Click(object sender, EventArgs e)
         {
-            using (FormGoToLine f = new FormGoToLine())
-            {
-                DialogResult dr = f.ShowDialog(this);
-                if (dr == DialogResult.Cancel)
-                {
-                    return;
-                }
+            //using (FormGoToLine f = new FormGoToLine())
+            //{
+            //    DialogResult dr = f.ShowDialog(this);
+            //    if (dr == DialogResult.Cancel)
+            //    {
+            //        return;
+            //    }
 
-                listLines.EnsureVisible(f.LineNumber - 1);
-                var ll = this.lf.Lines.SingleOrDefault(x => x.LineNumber == f.LineNumber);
-                if (ll != null)
-                {
-                    listLines.SelectedIndex = ll.LineNumber - 1;
-                    if (listLines.SelectedItem != null)
-                    {
-                        listLines.FocusedItem = listLines.SelectedItem;
-                    }
-                }
-            }
+            //    listLines0.EnsureVisible(f.LineNumber - 1);
+            //    var ll = this.lf.Lines.SingleOrDefault(x => x.LineNumber == f.LineNumber);
+            //    if (ll != null)
+            //    {
+            //        listLines0.SelectedIndex = ll.LineNumber - 1;
+            //        if (listLines0.SelectedItem != null)
+            //        {
+            //            listLines0.FocusedItem = listLines0.SelectedItem;
+            //        }
+            //    }
+            //}
         }
 
         /// <summary>
@@ -672,12 +683,12 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextLinesGoToFirstLine_Click(object sender, EventArgs e)
         {
-            listLines.EnsureVisible(0);
-            listLines.SelectedIndex = 0;
-            if (listLines.SelectedItem != null)
-            {
-                listLines.FocusedItem = listLines.SelectedItem;
-            }
+            //listLines0.EnsureVisible(0);
+            //listLines0.SelectedIndex = 0;
+            //if (listLines0.SelectedItem != null)
+            //{
+            //    listLines0.FocusedItem = listLines0.SelectedItem;
+            //}
         }
 
         /// <summary>
@@ -687,12 +698,12 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextLinesGoToLastLine_Click(object sender, EventArgs e)
         {
-            listLines.EnsureVisible(lf.LineCount - 1);
-            listLines.SelectedIndex = lf.LineCount - 1;
-            if (listLines.SelectedItem != null)
-            {
-                listLines.FocusedItem = listLines.SelectedItem;
-            }
+            //listLines0.EnsureVisible(lf.LineCount - 1);
+            //listLines0.SelectedIndex = lf.LineCount - 1;
+            //if (listLines0.SelectedItem != null)
+            //{
+            //    listLines0.FocusedItem = listLines0.SelectedItem;
+            //}
         }
 
         /// <summary>
@@ -702,32 +713,32 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            bool enableLineOps = true;
-            if (lf == null)
-            {
-                enableLineOps = false;
-            }
-            else
-            {
-                if (lf.LineCount == 0)
-                {
-                    enableLineOps = false;
-                }
-            }
+            //bool enableLineOps = true;
+            //if (lf == null)
+            //{
+            //    enableLineOps = false;
+            //}
+            //else
+            //{
+            //    if (lf.LineCount == 0)
+            //    {
+            //        enableLineOps = false;
+            //    }
+            //}
 
-            contextLinesGoToFirstLine.Enabled = enableLineOps;
-            contextLinesGoToLastLine.Enabled = enableLineOps;
-            contextLinesGoToLine.Enabled = enableLineOps;
+            //contextLinesGoToFirstLine.Enabled = enableLineOps;
+            //contextLinesGoToLastLine.Enabled = enableLineOps;
+            //contextLinesGoToLine.Enabled = enableLineOps;
 
-            if (listLines.SelectedObjects.Count > this.config.MultiSelectLimit)
-            {
-                contextMenuCopy.Enabled = false;
-                contextMenuExportSelected.Enabled = false;
-                return;
-            }
+            //if (listLines0.SelectedObjects.Count > this.config.MultiSelectLimit)
+            //{
+            //    contextMenuCopy.Enabled = false;
+            //    contextMenuExportSelected.Enabled = false;
+            //    return;
+            //}
 
-            contextMenuCopy.Enabled = true;
-            contextMenuExportSelected.Enabled = true;
+            //contextMenuCopy.Enabled = true;
+            //contextMenuExportSelected.Enabled = true;
         }
         #endregion
 
@@ -768,7 +779,37 @@ namespace LogViewer
                 return;
             }
 
-            LoadFile(openFileDialog.FileName);
+            LoadFile(openFileDialog.FileName, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void menuFileOpenNewTab_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "All Files|*.*";
+            openFileDialog.FileName = "*.*";
+            openFileDialog.Title = "Select log file";
+
+            if (openFileDialog.ShowDialog(this) == System.Windows.Forms.DialogResult.Cancel)
+            {
+                return;
+            }
+
+            LoadFile(openFileDialog.FileName, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuFileOpenNewTab_Click(object sender, EventArgs e)
+        {
+
         }
 
         /// <summary>
@@ -778,29 +819,29 @@ namespace LogViewer
         /// <param name="e"></param>
         private void menuFileClose_Click(object sender, EventArgs e)
         {
-            this.Text = "LogViewer";
+            //this.Text = "LogViewer";
 
-            // Clear any existing filters/reset values
-            this.listLines.ModelFilter = null;
-            this.viewMode = Global.ViewMode.Standard;
-            this.searches = new Searches();
-            this.filterIds.Clear();
+            //// Clear any existing filters/reset values
+            //this.listLines0.ModelFilter = null;
+            //this.viewMode = Global.ViewMode.Standard;
+            //this.searches = new Searches();
+            //this.filterIds.Clear();
 
-            if (lf != null)
-            {
-                listLines.ClearObjects();
-                lf.ProgressUpdate -= LogFile_LoadProgress;
-                lf.LoadComplete -= LogFile_LoadComplete;
-                lf.SearchComplete -= LogFile_SearchComplete;
-                lf.ExportComplete -= LogFile_ExportComplete;
-                lf.LoadError -= LogFile_LoadError;
-                lf.Dispose();
-                lf = null;
-            }
+            //if (lf != null)
+            //{
+            //    listLines0.ClearObjects();
+            //    lf.ProgressUpdate -= LogFile_LoadProgress;
+            //    lf.LoadComplete -= LogFile_LoadComplete;
+            //    lf.SearchComplete -= LogFile_SearchComplete;
+            //    lf.ExportComplete -= LogFile_ExportComplete;
+            //    lf.LoadError -= LogFile_LoadError;
+            //    lf.Dispose();
+            //    lf = null;
+            //}
 
-            menuFileClose.Enabled = false;
-            UpdateStatusLabel("", statusLabelMain);
-            UpdateStatusLabel("", statusLabelSearch);
+            //menuFileClose.Enabled = false;
+            //UpdateStatusLabel("", statusLabelMain);
+            //UpdateStatusLabel("", statusLabelSearch);
         }
 
         /// <summary>
@@ -843,31 +884,31 @@ namespace LogViewer
         /// <param name="e"></param>
         private void menuToolsMultiStringSearch_Click(object sender, EventArgs e)
         {
-            using (FormSearch f = new FormSearch(this.searches))
-            {
-                DialogResult dr = f.ShowDialog(this);
-                if (dr == DialogResult.Cancel)
-                {
-                    return;
-                }
+            //using (FormSearch f = new FormSearch(this.searches))
+            //{
+            //    DialogResult dr = f.ShowDialog(this);
+            //    if (dr == DialogResult.Cancel)
+            //    {
+            //        return;
+            //    }
 
-                // Clear any existing filter ID's as we will only show the multi-string search
-                filterIds.Clear();
-                this.searches.Reset();
-                foreach (SearchCriteria sc in f.NewSearches)
-                {                    
-                    // Add the ID so that any matches show up straight away
-                    filterIds.Add(sc.Id);
-                    this.searches.Add(sc);
-                }                
+            //    // Clear any existing filter ID's as we will only show the multi-string search
+            //    filterIds.Clear();
+            //    this.searches.Reset();
+            //    foreach (SearchCriteria sc in f.NewSearches)
+            //    {                    
+            //        // Add the ID so that any matches show up straight away
+            //        filterIds.Add(sc.Id);
+            //        this.searches.Add(sc);
+            //    }                
 
-                this.processing = true;
-                this.hourGlass = new HourGlass(this);
-                SetProcessingState(false);
-                statusProgress.Visible = true;
-                this.cancellationTokenSource = new CancellationTokenSource();
-                lf.SearchMulti(f.NewSearches, cancellationTokenSource.Token, config.NumContextLines);
-            }
+            //    this.processing = true;
+            //    this.hourGlass = new HourGlass(this);
+            //    SetProcessingState(false);
+            //    statusProgress.Visible = true;
+            //    this.cancellationTokenSource = new CancellationTokenSource();
+            //    lf.SearchMulti(f.NewSearches, cancellationTokenSource.Token, config.NumContextLines);
+            //}
         }
 
         /// <summary>
@@ -915,10 +956,10 @@ namespace LogViewer
         /// <param name="enabled"></param>
         private void UpdateStatusLabel(string text, ToolStripStatusLabel control)
         {
-            synchronizationContext.Post(new SendOrPostCallback(o =>
-            {
-                control.Text = (string)o;
-            }), text);
+            //synchronizationContext.Post(new SendOrPostCallback(o =>
+            //{
+            //    control.Text = (string)o;
+            //}), text);
         }
         #endregion
 
@@ -930,8 +971,19 @@ namespace LogViewer
         /// <param name="e"></param>
         private void statusProgress_Click(object sender, EventArgs e)
         {
-            this.cancellationTokenSource.Cancel();          
+            //this.cancellationTokenSource.Cancel();          
         }
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            currentTabIndex = tabControl.SelectedIndex;
+        }
+
     }
 }
