@@ -54,9 +54,9 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        public LogFile(string filePath)
+        public LogFile()
         {
-            this.filePath = filePath;
+           
             this.Guid = System.Guid.NewGuid().ToString();
         }
 
@@ -66,8 +66,10 @@ namespace LogViewer
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="ct"></param>
-        public void Load(SynchronizationContext st, CancellationToken ct)
+        public void Load(string filePath, SynchronizationContext st, CancellationToken ct)
         {
+            this.filePath = filePath;
+
             Task.Run(() => {
 
                 DateTime start = DateTime.Now;
@@ -226,6 +228,14 @@ namespace LogViewer
         public void Dispose()
         {
             this.Lines.Clear();
+            this.LongestLine = new LogLine();
+            this.LineCount = 0;   
+            this.filePath = string.Empty;
+            this.FilterIds = new List<ushort>();
+            this.List.ModelFilter = null;
+            this.FilterIds.Clear();
+            this.List.ClearObjects();
+
             if (this.fileStream != null)
             {
                 this.fileStream.Dispose();
@@ -539,6 +549,7 @@ namespace LogViewer
             tp.TabIndex = 0;
             tp.Text = "tabPage1";
             tp.UseVisualStyleBackColor = true;
+            tp.Tag = this.Guid;
 
             return tp;
         }

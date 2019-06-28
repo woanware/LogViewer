@@ -154,13 +154,13 @@ namespace LogViewer
             menuToolsMultiStringSearch.Enabled = true;
 
             // Clear any existing filters/reset values
-           // this.listLines0.ModelFilter = null;
+           // 
             this.viewMode = Global.ViewMode.Standard;
             this.searches = new Searches();
 
             if (newTab == true)
             {
-                LogFile lf = new LogFile(filePath);
+                LogFile lf = new LogFile();
                 logs.Add(lf.Guid, lf);
            
                 tabControl.TabPages.Add(lf.Initialise());
@@ -170,32 +170,29 @@ namespace LogViewer
                 lf.SearchComplete += LogFile_SearchComplete;
                 lf.ExportComplete += LogFile_ExportComplete;
                 lf.LoadError += LogFile_LoadError;
-                lf.Load(synchronizationContext, cancellationTokenSource.Token);
+                lf.Load(filePath, synchronizationContext, cancellationTokenSource.Token);
             } 
             else
             {
+                if (tabControl.SelectedTab == null)
+                {
+                    UserInterface.DisplayMessageBox(this, "Cannot identify current tab", MessageBoxIcon.Exclamation);
+                    return;
+                }
+
+                if (!logs.ContainsKey(tabControl.SelectedTab.Tag.ToString()))
+                {
+                    UserInterface.DisplayMessageBox(this, "Cannot identify current tab", MessageBoxIcon.Exclamation);
+                    return;
+                }
+
                 // Get the current selected log file
+                LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];                           
+                lf.Dispose();
+                lf.Load(filePath, synchronizationContext, cancellationTokenSource.Token);
             }
-            
 
-
-
-            //this.filterIds.Clear();
-
-            //if (lf != null)
-            //{
-            //    listLines.ClearObjects();
-            //    lf.ProgressUpdate -= LogFile_LoadProgress;
-            //    lf.LoadComplete -= LogFile_LoadComplete;
-            //    lf.SearchComplete -= LogFile_SearchComplete;
-            //    lf.ExportComplete -= LogFile_ExportComplete;
-            //    lf.LoadError -= LogFile_LoadError;
-            //    lf.Dispose();
-            //}
-
-           // this.Text = "LogViewer - " + filePath;
-
-                
+            // this.Text = "LogViewer - " + filePath;
         }
 
         /// <summary>
