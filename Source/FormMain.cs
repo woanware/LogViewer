@@ -62,26 +62,7 @@ namespace LogViewer
             this.highlightColour = config.GetHighlightColour();
             this.contextColour = config.GetContextColour();
 
-            //this.olvcLineNumber.AspectGetter = delegate (object x)
-            //{
-            //    if (((LogLine)x) == null )
-            //    {
-            //        return "";
-            //    }
-
-            //    return (((LogLine)x).LineNumber + 1);
-            //};
-
-            //this.olvcText.AspectGetter = delegate (object x)
-            //{
-            //    if (((LogLine)x) == null)
-            //    {
-            //        return "";
-            //    }
-
-            //    return (lf.GetLine(((LogLine)x).LineNumber));
-            //};
-
+            menuFileOpen.Enabled = false;
             menuFileClose.Enabled = false;
         }
 
@@ -124,7 +105,14 @@ namespace LogViewer
                 return;
             }
 
-           // LoadFile(files[0]);
+            if (logs.Count == 0)
+            {
+                LoadFile(files[0], true);
+            }
+            else
+            {
+                LoadFile(files[0], false);
+            }
         }
 
         /// <summary>
