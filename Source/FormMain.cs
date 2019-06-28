@@ -23,8 +23,7 @@ namespace LogViewer
         private bool processing;
         private Color highlightColour = Color.Lime;
         private Color contextColour = Color.LightGray;
-        private Configuration config;
-        private Global.ViewMode viewMode = Global.ViewMode.Standard;
+        private Configuration config;        
         private Dictionary<string, LogFile> logs;
         private int currentTabIndex = -1;
         #endregion
@@ -154,8 +153,7 @@ namespace LogViewer
             menuToolsMultiStringSearch.Enabled = true;
 
             // Clear any existing filters/reset values
-            // 
-            this.viewMode = Global.ViewMode.Standard;
+            //           
             this.searches = new Searches();
 
             if (newTab == true)
@@ -164,7 +162,8 @@ namespace LogViewer
                 logs.Add(lf.Guid, lf);
 
                 tabControl.TabPages.Add(lf.Initialise());
-
+                lf.SetContextMenu(contextMenu);
+                lf.ViewMode = Global.ViewMode.Standard;
                 lf.ProgressUpdate += LogFile_LoadProgress;
                 lf.LoadComplete += LogFile_LoadComplete;
                 lf.SearchComplete += LogFile_SearchComplete;
@@ -498,10 +497,13 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuFilterShowMatched_Click(object sender, EventArgs e)
         {
-            //this.viewMode = Global.ViewMode.FilterShow;
-            //this.listLines0.ModelFilter = new ModelFilter(delegate (object x) {
-            //    return x != null && (((LogLine)x).SearchMatches.Intersect(filterIds).Any() == true || (((LogLine)x).IsContextLine == true));
-            //});
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+            lf.ViewMode = Global.ViewMode.FilterShow;
+
+            lf.List.ModelFilter = new ModelFilter(delegate (object x)
+            {
+                return x != null && (((LogLine)x).SearchMatches.Intersect(lf.FilterIds).Any() == true || (((LogLine)x).IsContextLine == true));
+            });
         }
 
         /// <summary>
@@ -511,10 +513,12 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuFilterHideMatched_Click(object sender, EventArgs e)
         {
-            //this.viewMode = Global.ViewMode.FilterHide;
-            //this.listLines0.ModelFilter = new ModelFilter(delegate (object x) {
-            //    return x != null && (((LogLine)x).SearchMatches.Intersect(filterIds).Any() == false);
-            //});
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+            lf.ViewMode = Global.ViewMode.FilterShow;
+            lf.List.ModelFilter = new ModelFilter(delegate (object x)
+            {
+                return x != null && (((LogLine)x).SearchMatches.Intersect(lf.FilterIds).Any() == false);
+            });
         }
 
         /// <summary>
@@ -524,30 +528,30 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuSearchViewTerms_Click(object sender, EventArgs e)
         {
-            //using (FormSearchTerms f = new FormSearchTerms(this.searches))
-            //{
-            //    DialogResult dr = f.ShowDialog(this);
-            //    if (dr == DialogResult.Cancel)
-            //    {
-            //        return;
-            //    }
+            using (FormSearchTerms f = new FormSearchTerms(this.searches))
+            {
+                DialogResult dr = f.ShowDialog(this);
+                if (dr == DialogResult.Cancel)
+                {
+                    return;
+                }
 
-            //    this.searches = f.Searches;
+                this.searches = f.Searches;
 
-            //    filterIds.Clear();
-            //    foreach (SearchCriteria sc in searches.Items)
-            //    {
-            //        if (sc.Enabled == false)
-            //        {
-            //            continue;
-            //        }
+                LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+                lf.FilterIds.Clear();
+                foreach (SearchCriteria sc in searches.Items)
+                {
+                    if (sc.Enabled == false)
+                    {
+                        continue;
+                    }
 
-            //        filterIds.Add(sc.Id);
-            //    }
+                    lf.FilterIds.Add(sc.Id);
+                }
 
-            //    listLines0.Refresh();
-            //}
-
+                lf.List.Refresh();
+            }
         }
 
         /// <summary>
@@ -565,7 +569,9 @@ namespace LogViewer
             }
 
             this.highlightColour = cd.Color;
-            // listLines0.Refresh();
+
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+            lf.List.Refresh();
         }
 
         /// <summary>
@@ -583,7 +589,9 @@ namespace LogViewer
             }
 
             this.contextColour = cd.Color;
-            // listLines0.Refresh();
+
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+            lf.List.Refresh();
         }
 
         /// <summary>
@@ -632,14 +640,16 @@ namespace LogViewer
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void contextMenuCopy_Click(object sender, EventArgs e)
-        {
-            //StringBuilder sb = new StringBuilder();
-            //foreach (LogLine ll in listLines0.SelectedObjects)
-            //{
-            //    sb.AppendLine(lf.GetLine(ll.LineNumber));
-            //}
+        {            
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
 
-            //Clipboard.SetText(sb.ToString());
+            StringBuilder sb = new StringBuilder();
+            foreach (LogLine ll in lf.List.SelectedObjects)
+            {
+                sb.AppendLine(lf.GetLine(ll.LineNumber));
+            }
+
+            Clipboard.SetText(sb.ToString());
         }
 
         /// <summary>
@@ -649,25 +659,27 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextLinesGoToLine_Click(object sender, EventArgs e)
         {
-            //using (FormGoToLine f = new FormGoToLine())
-            //{
-            //    DialogResult dr = f.ShowDialog(this);
-            //    if (dr == DialogResult.Cancel)
-            //    {
-            //        return;
-            //    }
+            using (FormGoToLine f = new FormGoToLine())
+            {
+                DialogResult dr = f.ShowDialog(this);
+                if (dr == DialogResult.Cancel)
+                {
+                    return;
+                }
 
-            //    listLines0.EnsureVisible(f.LineNumber - 1);
-            //    var ll = this.lf.Lines.SingleOrDefault(x => x.LineNumber == f.LineNumber);
-            //    if (ll != null)
-            //    {
-            //        listLines0.SelectedIndex = ll.LineNumber - 1;
-            //        if (listLines0.SelectedItem != null)
-            //        {
-            //            listLines0.FocusedItem = listLines0.SelectedItem;
-            //        }
-            //    }
-            //}
+                LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+
+                lf.List.EnsureVisible(f.LineNumber - 1);
+                var ll = lf.Lines.SingleOrDefault(x => x.LineNumber == f.LineNumber);
+                if (ll != null)
+                {
+                    lf.List.SelectedIndex = ll.LineNumber - 1;
+                    if (lf.List.SelectedItem != null)
+                    {
+                        lf.List.FocusedItem = lf.List.SelectedItem;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -677,12 +689,14 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextLinesGoToFirstLine_Click(object sender, EventArgs e)
         {
-            //listLines0.EnsureVisible(0);
-            //listLines0.SelectedIndex = 0;
-            //if (listLines0.SelectedItem != null)
-            //{
-            //    listLines0.FocusedItem = listLines0.SelectedItem;
-            //}
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+
+            lf.List.EnsureVisible(0);
+            lf.List.SelectedIndex = 0;
+            if (lf.List.SelectedItem != null)
+            {
+                lf.List.FocusedItem = lf.List.SelectedItem;
+            }
         }
 
         /// <summary>
@@ -692,12 +706,14 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextLinesGoToLastLine_Click(object sender, EventArgs e)
         {
-            //listLines0.EnsureVisible(lf.LineCount - 1);
-            //listLines0.SelectedIndex = lf.LineCount - 1;
-            //if (listLines0.SelectedItem != null)
-            //{
-            //    listLines0.FocusedItem = listLines0.SelectedItem;
-            //}
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+
+            lf.List.EnsureVisible(lf.LineCount - 1);
+            lf.List.SelectedIndex = lf.LineCount - 1;
+            if (lf.List.SelectedItem != null)
+            {
+                lf.List.FocusedItem = lf.List.SelectedItem;
+            }
         }
 
         /// <summary>
@@ -707,32 +723,42 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //bool enableLineOps = true;
-            //if (lf == null)
-            //{
-            //    enableLineOps = false;
-            //}
-            //else
-            //{
-            //    if (lf.LineCount == 0)
-            //    {
-            //        enableLineOps = false;
-            //    }
-            //}
+            bool enableLineOps = true;
 
-            //contextLinesGoToFirstLine.Enabled = enableLineOps;
-            //contextLinesGoToLastLine.Enabled = enableLineOps;
-            //contextLinesGoToLine.Enabled = enableLineOps;
+            LogFile lf = null;
+            if (tabControl.SelectedTab != null)
+            {
+                lf = logs[tabControl.SelectedTab.Tag.ToString()];
+            }
+           
+            if (lf == null)
+            {
+                enableLineOps = false;
+            }
+            else
+            {
+                if (lf.LineCount == 0)
+                {
+                    enableLineOps = false;
+                }
+            }
 
-            //if (listLines0.SelectedObjects.Count > this.config.MultiSelectLimit)
-            //{
-            //    contextMenuCopy.Enabled = false;
-            //    contextMenuExportSelected.Enabled = false;
-            //    return;
-            //}
+            contextLinesGoToFirstLine.Enabled = enableLineOps;
+            contextLinesGoToLastLine.Enabled = enableLineOps;
+            contextLinesGoToLine.Enabled = enableLineOps;
 
-            //contextMenuCopy.Enabled = true;
-            //contextMenuExportSelected.Enabled = true;
+            if (lf != null)
+            {
+                if (lf.List.SelectedObjects.Count > this.config.MultiSelectLimit)
+                {
+                    contextMenuCopy.Enabled = false;
+                    contextMenuExportSelected.Enabled = false;
+                    return;
+                }
+            }          
+
+            contextMenuCopy.Enabled = true;
+            contextMenuExportSelected.Enabled = true;
         }
         #endregion
 

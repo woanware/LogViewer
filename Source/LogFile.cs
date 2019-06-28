@@ -39,7 +39,7 @@ namespace LogViewer
         private Color contextColour = Color.LightGray;
 
         #region Member Variables
-       
+        public Global.ViewMode ViewMode { get; set; }  = Global.ViewMode.Standard;
         public List<LogLine> Lines { get; private set; } = new List<LogLine>();
         public LogLine LongestLine { get; private set; } = new LogLine();
         public int LineCount { get; private set; } = 0;
@@ -555,8 +555,20 @@ namespace LogViewer
             return tp;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SetContextMenu(ContextMenuStrip ctx)
+        {
+            this.List.ContextMenuStrip = ctx;
+        }
 
-        public void FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void FormatRow(object sender, FormatRowEventArgs e)
         {
             //if (this.viewMode != Global.ViewMode.FilterHide)
             //{
