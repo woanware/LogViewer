@@ -19,7 +19,7 @@ namespace LogViewer
         private readonly SynchronizationContext synchronizationContext;
         private CancellationTokenSource cancellationTokenSource;
         private Searches searches;
-        private HourGlass hourGlass;        
+        private HourGlass hourGlass;
         private bool processing;
         private Color highlightColour = Color.Lime;
         private Color contextColour = Color.LightGray;
@@ -40,7 +40,7 @@ namespace LogViewer
             synchronizationContext = SynchronizationContext.Current;
             dropdownSearchType.SelectedIndex = 0;
             logs = new Dictionary<string, LogFile>();
-            searches = new Searches();            
+            searches = new Searches();
         }
         #endregion
 
@@ -154,7 +154,7 @@ namespace LogViewer
             menuToolsMultiStringSearch.Enabled = true;
 
             // Clear any existing filters/reset values
-           // 
+            // 
             this.viewMode = Global.ViewMode.Standard;
             this.searches = new Searches();
 
@@ -162,7 +162,7 @@ namespace LogViewer
             {
                 LogFile lf = new LogFile();
                 logs.Add(lf.Guid, lf);
-           
+
                 tabControl.TabPages.Add(lf.Initialise());
 
                 lf.ProgressUpdate += LogFile_LoadProgress;
@@ -170,8 +170,11 @@ namespace LogViewer
                 lf.SearchComplete += LogFile_SearchComplete;
                 lf.ExportComplete += LogFile_ExportComplete;
                 lf.LoadError += LogFile_LoadError;
+                lf.List.ItemActivate += new EventHandler(this.listLines_ItemActivate);
+                lf.List.DragDrop += new DragEventHandler(this.listLines_DragDrop);
+                lf.List.DragEnter += new DragEventHandler(this.listLines_DragEnter);
                 lf.Load(filePath, synchronizationContext, cancellationTokenSource.Token);
-            } 
+            }
             else
             {
                 if (tabControl.SelectedTab == null)
@@ -186,8 +189,8 @@ namespace LogViewer
                     return;
                 }
 
-                // Get the current selected log file
-                LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];                           
+                // Get the current selected log file and open the file using that object
+                LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
                 lf.Dispose();
                 lf.Load(filePath, synchronizationContext, cancellationTokenSource.Token);
             }
@@ -220,16 +223,16 @@ namespace LogViewer
 
             //// Add the ID so that any matches show up straight away
             //logs[currentTabIndex].FilterIds.Add(sc.Id);
-            
+
             //filterIds.Add(sc.Id);
 
             this.processing = true;
             this.hourGlass = new HourGlass(this);
             SetProcessingState(false);
             statusProgress.Visible = true;
-           // this.cancellationTokenSource = new CancellationTokenSource();
+            // this.cancellationTokenSource = new CancellationTokenSource();
             //lf.Search(sc, toolButtonCumulative.Checked, cancellationTokenSource.Token, config.NumContextLines);
-           // logs[currentTabIndex].Search(sc, toolButtonCumulative.Checked, cancellationTokenSource.Token, config.NumContextLines);
+            // logs[currentTabIndex].Search(sc, toolButtonCumulative.Checked, cancellationTokenSource.Token, config.NumContextLines);
         }
 
         /// <summary>
@@ -242,7 +245,7 @@ namespace LogViewer
             this.hourGlass = new HourGlass(this);
             SetProcessingState(false);
             statusProgress.Visible = true;
-           // this.cancellationTokenSource = new CancellationTokenSource();
+            // this.cancellationTokenSource = new CancellationTokenSource();
 
             //if (listLines.ModelFilter == null)
             //{
@@ -264,7 +267,7 @@ namespace LogViewer
             this.hourGlass = new HourGlass(this);
             SetProcessingState(false);
             statusProgress.Visible = true;
-          //  this.cancellationTokenSource = new CancellationTokenSource();
+            //  this.cancellationTokenSource = new CancellationTokenSource();
 
             //lf.Export(listLines.SelectedObjects, filePath, cancellationTokenSource.Token);
         }
@@ -357,6 +360,8 @@ namespace LogViewer
                 this.processing = false;
                 menuFileClose.Enabled = true;
                 menuFileOpen.Enabled = true; // Enable the standard file open, since we can now open in an existing tab, since at least one tab exists
+                int index = tabControl.TabPages.IndexOfKey("tabPage" + lf.Guid);
+                tabControl.TabPages[index].Text = lf.FileName;
 
             }), null);
         }
@@ -368,25 +373,27 @@ namespace LogViewer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        //private void listLines_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
-        //{
-        //    ////if (this.viewMode != Global.ViewMode.FilterHide)
-        //   // //{
-        //        //if ((LogLine)e.Model == null)
-        //        //{
-        //        //    return;
-        //        //}
+        private void listLines_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e)
+        {
+            //if (this.viewMode != Global.ViewMode.FilterHide)
+            //{
+            if ((LogLine)e.Model == null)
+            {
+                return;
+            }
 
-        //        //if (((LogLine)e.Model).SearchMatches.Intersect(filterIds).Any() == true)
-        //        //{
-        //        //    e.Item.BackColor = highlightColour;
-        //        //}
-        //        //else if (((LogLine)e.Model).IsContextLine == true)
-        //        //{
-        //        //    e.Item.BackColor = contextColour;
-        //        //}
-        //   // //}            
-        //}
+            LogFile lf = logs[e.ListView.Tag.ToString()];
+
+            if (((LogLine)e.Model).SearchMatches.Intersect(lf.FilterIds).Any() == true)
+            {
+                e.Item.BackColor = highlightColour;
+            }
+            else if (((LogLine)e.Model).IsContextLine == true)
+            {
+                e.Item.BackColor = contextColour;
+            }
+            //}            
+        }
 
         /// <summary>
         /// 
@@ -433,8 +440,8 @@ namespace LogViewer
                 UserInterface.DisplayMessageBox(this, "Only one file can be processed at one time", MessageBoxIcon.Exclamation);
                 return;
             }
-///
-   //         LoadFile(files[0]);
+
+            LoadFile(files[0], false);
         }
 
         /// <summary>
@@ -444,16 +451,18 @@ namespace LogViewer
         /// <param name="e"></param>
         private void listLines_ItemActivate(object sender, EventArgs e)
         {
-            //if (listLines0.SelectedObjects.Count != 1)
-            //{
-            //    return;
-            //}
+            var lv = (FastObjectListView)sender; // or 'sender as Button'
+            if (lv.SelectedObjects.Count != 1)
+            {
+                return;
+            }
 
-            //LogLine ll = (LogLine)listLines0.SelectedObjects[0];
-            //using (FormLine f = new FormLine(this.lf.GetLine(ll.LineNumber)))
-            //{
-            //    f.ShowDialog(this);
-            //}
+            LogFile lf = logs[lv.Tag.ToString()];
+            LogLine ll = (LogLine)lv.SelectedObjects[0];
+            using (FormLine f = new FormLine(lf.GetLine(ll.LineNumber)))
+            {
+                f.ShowDialog(this);
+            }
         }
         #endregion
 
@@ -556,7 +565,7 @@ namespace LogViewer
             }
 
             this.highlightColour = cd.Color;
-           // listLines0.Refresh();
+            // listLines0.Refresh();
         }
 
         /// <summary>
@@ -574,7 +583,7 @@ namespace LogViewer
             }
 
             this.contextColour = cd.Color;
-           // listLines0.Refresh();
+            // listLines0.Refresh();
         }
 
         /// <summary>

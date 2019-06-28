@@ -46,6 +46,7 @@ namespace LogViewer
         private FileStream fileStream;
         private Mutex readMutex = new Mutex();
         private string filePath;
+        public string FileName { get; private set; }
         public List<ushort> FilterIds { get; private set; }  = new List<ushort>();
         public FastObjectListView List { get; set; }
         public string Guid { get; private set; }
@@ -55,8 +56,7 @@ namespace LogViewer
         /// 
         /// </summary>
         public LogFile()
-        {
-           
+        {           
             this.Guid = System.Guid.NewGuid().ToString();
         }
 
@@ -69,6 +69,7 @@ namespace LogViewer
         public void Load(string filePath, SynchronizationContext st, CancellationToken ct)
         {
             this.filePath = filePath;
+            this.FileName = Path.GetFileName(filePath);
 
             Task.Run(() => {
 
@@ -536,20 +537,20 @@ namespace LogViewer
             lv.View = System.Windows.Forms.View.Details;
             lv.VirtualMode = true;
             lv.Tag = this.Guid;
-            lv.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.FormatRow);
+            lv.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.FormatRow);            
 
             this.List = lv;
 
             TabPage tp = new TabPage();
             tp.Controls.Add(lv);
             tp.Location = new System.Drawing.Point(4, 33);
-            tp.Name = "tabPage1";
+            tp.Name = "tabPage" + this.Guid;
             tp.Padding = new System.Windows.Forms.Padding(3);
             tp.Size = new System.Drawing.Size(1685, 946);
             tp.TabIndex = 0;
-            tp.Text = "tabPage1";
+            tp.Text = "";
             tp.UseVisualStyleBackColor = true;
-            tp.Tag = this.Guid;
+            tp.Tag = this.Guid;          
 
             return tp;
         }
