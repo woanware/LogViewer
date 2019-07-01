@@ -39,9 +39,10 @@
             // checkShowContextLines
             // 
             this.checkShowContextLines.AutoSize = true;
-            this.checkShowContextLines.Location = new System.Drawing.Point(12, 12);
+            this.checkShowContextLines.Location = new System.Drawing.Point(20, 26);
+            this.checkShowContextLines.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkShowContextLines.Name = "checkShowContextLines";
-            this.checkShowContextLines.Size = new System.Drawing.Size(167, 24);
+            this.checkShowContextLines.Size = new System.Drawing.Size(201, 29);
             this.checkShowContextLines.TabIndex = 0;
             this.checkShowContextLines.Text = "Show context lines";
             this.checkShowContextLines.UseVisualStyleBackColor = true;
@@ -62,17 +63,19 @@
             "8",
             "9",
             "10"});
-            this.comboNumLines.Location = new System.Drawing.Point(196, 46);
+            this.comboNumLines.Location = new System.Drawing.Point(242, 68);
+            this.comboNumLines.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboNumLines.Name = "comboNumLines";
-            this.comboNumLines.Size = new System.Drawing.Size(91, 28);
+            this.comboNumLines.Size = new System.Drawing.Size(110, 32);
             this.comboNumLines.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 49);
+            this.label1.Location = new System.Drawing.Point(15, 71);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(178, 20);
+            this.label1.Size = new System.Drawing.Size(219, 25);
             this.label1.TabIndex = 2;
             this.label1.Text = "Number of lines to show";
             // 
@@ -80,9 +83,10 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(249, 88);
+            this.buttonCancel.Location = new System.Drawing.Point(304, 131);
+            this.buttonCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(120, 40);
+            this.buttonCancel.Size = new System.Drawing.Size(147, 48);
             this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -91,9 +95,10 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(123, 88);
+            this.buttonOK.Location = new System.Drawing.Point(150, 131);
+            this.buttonOK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(120, 40);
+            this.buttonOK.Size = new System.Drawing.Size(147, 48);
             this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -102,10 +107,10 @@
             // FormConfiguration
             // 
             this.AcceptButton = this.buttonOK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(381, 140);
+            this.ClientSize = new System.Drawing.Size(466, 193);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.label1);
@@ -113,6 +118,7 @@
             this.Controls.Add(this.checkShowContextLines);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormConfiguration";

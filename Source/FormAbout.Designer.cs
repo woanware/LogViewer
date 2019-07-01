@@ -47,18 +47,20 @@
             this.pictureBox2.BackColor = System.Drawing.Color.White;
             this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Top;
             this.pictureBox2.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(458, 137);
+            this.pictureBox2.Size = new System.Drawing.Size(560, 164);
             this.pictureBox2.TabIndex = 26;
             this.pictureBox2.TabStop = false;
             // 
             // linkEmail
             // 
             this.linkEmail.AutoSize = true;
-            this.linkEmail.Location = new System.Drawing.Point(134, 174);
+            this.linkEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.857143F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkEmail.Location = new System.Drawing.Point(137, 226);
+            this.linkEmail.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.linkEmail.Name = "linkEmail";
-            this.linkEmail.Size = new System.Drawing.Size(169, 20);
+            this.linkEmail.Size = new System.Drawing.Size(259, 29);
             this.linkEmail.TabIndex = 25;
             this.linkEmail.TabStop = true;
             this.linkEmail.Text = "markwoan@gmail.com";
@@ -67,9 +69,11 @@
             // linkWeb
             // 
             this.linkWeb.AutoSize = true;
-            this.linkWeb.Location = new System.Drawing.Point(134, 154);
+            this.linkWeb.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.857143F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkWeb.Location = new System.Drawing.Point(137, 184);
+            this.linkWeb.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.linkWeb.Name = "linkWeb";
-            this.linkWeb.Size = new System.Drawing.Size(160, 20);
+            this.linkWeb.Size = new System.Drawing.Size(247, 29);
             this.linkWeb.TabIndex = 24;
             this.linkWeb.TabStop = true;
             this.linkWeb.Text = "www.woanware.co.uk";
@@ -78,10 +82,10 @@
             // btnClose
             // 
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(338, 256);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnClose.Location = new System.Drawing.Point(400, 347);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(108, 32);
+            this.btnClose.Size = new System.Drawing.Size(147, 48);
             this.btnClose.TabIndex = 23;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
@@ -92,9 +96,10 @@
             this.lblVer.AutoSize = true;
             this.lblVer.BackColor = System.Drawing.Color.White;
             this.lblVer.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblVer.Location = new System.Drawing.Point(357, 60);
+            this.lblVer.Location = new System.Drawing.Point(436, 72);
+            this.lblVer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblVer.Name = "lblVer";
-            this.lblVer.Size = new System.Drawing.Size(81, 25);
+            this.lblVer.Size = new System.Drawing.Size(91, 28);
             this.lblVer.TabIndex = 29;
             this.lblVer.Text = "v1.0.0";
             // 
@@ -103,9 +108,10 @@
             this.lblApp.AutoSize = true;
             this.lblApp.BackColor = System.Drawing.Color.White;
             this.lblApp.Font = new System.Drawing.Font("Verdana", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblApp.Location = new System.Drawing.Point(117, 44);
+            this.lblApp.Location = new System.Drawing.Point(143, 53);
+            this.lblApp.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblApp.Name = "lblApp";
-            this.lblApp.Size = new System.Drawing.Size(234, 44);
+            this.lblApp.Size = new System.Drawing.Size(271, 51);
             this.lblApp.TabIndex = 28;
             this.lblApp.Text = "LogViewer";
             // 
@@ -113,19 +119,21 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(0, 11);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pictureBox1.Location = new System.Drawing.Point(0, 13);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(111, 126);
+            this.pictureBox1.Size = new System.Drawing.Size(136, 151);
             this.pictureBox1.TabIndex = 27;
             this.pictureBox1.TabStop = false;
             // 
             // linkIcons8
             // 
             this.linkIcons8.AutoSize = true;
-            this.linkIcons8.Location = new System.Drawing.Point(205, 227);
+            this.linkIcons8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.857143F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkIcons8.Location = new System.Drawing.Point(251, 272);
+            this.linkIcons8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.linkIcons8.Name = "linkIcons8";
-            this.linkIcons8.Size = new System.Drawing.Size(89, 20);
+            this.linkIcons8.Size = new System.Drawing.Size(135, 29);
             this.linkIcons8.TabIndex = 30;
             this.linkIcons8.TabStop = true;
             this.linkIcons8.Text = "icons8.com";
@@ -134,19 +142,21 @@
             // labelIconsBy
             // 
             this.labelIconsBy.AutoSize = true;
-            this.labelIconsBy.Location = new System.Drawing.Point(134, 227);
+            this.labelIconsBy.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.857143F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelIconsBy.Location = new System.Drawing.Point(147, 272);
+            this.labelIconsBy.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelIconsBy.Name = "labelIconsBy";
-            this.labelIconsBy.Size = new System.Drawing.Size(68, 20);
+            this.labelIconsBy.Size = new System.Drawing.Size(101, 29);
             this.labelIconsBy.TabIndex = 31;
             this.labelIconsBy.Text = "Icons by";
             // 
             // FormAbout
             // 
             this.AcceptButton = this.btnClose;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(458, 299);
+            this.ClientSize = new System.Drawing.Size(560, 406);
             this.Controls.Add(this.labelIconsBy);
             this.Controls.Add(this.linkIcons8);
             this.Controls.Add(this.lblVer);
@@ -158,6 +168,7 @@
             this.Controls.Add(this.btnClose);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormAbout";
