@@ -349,11 +349,11 @@ namespace LogViewer
                     {
                         string temp = lf.GetLine(lf.LongestLine.LineNumber);
                         var result = g.MeasureString(temp, new Font("Consolas", 9, FontStyle.Regular, GraphicsUnit.Pixel));
-                        lf.List.Columns[1].Width = Convert.ToInt32(result.Width + 100);
+                        lf.List.Columns[1].Width = Convert.ToInt32(result.Width + 200);
                     }
                 }
 
-                lf.List.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+                lf.List.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
                 statusProgress.Visible = false;
                
                 SetProcessingState(true);
@@ -903,31 +903,33 @@ namespace LogViewer
         /// <param name="e"></param>
         private void menuToolsMultiStringSearch_Click(object sender, EventArgs e)
         {
-            //using (FormSearch f = new FormSearch(this.searches))
-            //{
-            //    DialogResult dr = f.ShowDialog(this);
-            //    if (dr == DialogResult.Cancel)
-            //    {
-            //        return;
-            //    }
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
 
-            //    // Clear any existing filter ID's as we will only show the multi-string search
-            //    filterIds.Clear();
-            //    this.searches.Reset();
-            //    foreach (SearchCriteria sc in f.NewSearches)
-            //    {                    
-            //        // Add the ID so that any matches show up straight away
-            //        filterIds.Add(sc.Id);
-            //        this.searches.Add(sc);
-            //    }                
+            using (FormSearch f = new FormSearch(lf.Searches))
+            {
+                DialogResult dr = f.ShowDialog(this);
+                if (dr == DialogResult.Cancel)
+                {
+                    return;
+                }
 
-            //    this.processing = true;
-            //    this.hourGlass = new HourGlass(this);
-            //    SetProcessingState(false);
-            //    statusProgress.Visible = true;
-            //    this.cancellationTokenSource = new CancellationTokenSource();
-            //    lf.SearchMulti(f.NewSearches, cancellationTokenSource.Token, config.NumContextLines);
-            //}
+                // Clear any existing filter ID's as we will only show the multi-string search
+                lf.FilterIds.Clear();
+                lf.Searches.Reset();
+                foreach (SearchCriteria sc in f.NewSearches)
+                {
+                    // Add the ID so that any matches show up straight away
+                    lf.FilterIds.Add(sc.Id);
+                    lf.Searches.Add(sc);
+                }
+
+                this.processing = true;
+                this.hourGlass = new HourGlass(this);
+                SetProcessingState(false);
+                statusProgress.Visible = true;
+                this.cancellationTokenSource = new CancellationTokenSource();
+                lf.SearchMulti(f.NewSearches, cancellationTokenSource.Token, config.NumContextLines);
+            }
         }
 
         /// <summary>
