@@ -214,24 +214,17 @@ namespace LogViewer
                 return;
             }
 
-            //if (logs.ContainsKey(currentTabIndex) == false)
-            //{
-            //    UserInterface.DisplayMessageBox(this, "Log file not available", MessageBoxIcon.Exclamation);
-            //    return;
-            //}
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
 
-            //// Add the ID so that any matches show up straight away
-            //logs[currentTabIndex].FilterIds.Add(sc.Id);
-
-            //filterIds.Add(sc.Id);
+            // Add the ID so that any matches show up straight away
+            lf.FilterIds.Add(sc.Id);
 
             this.processing = true;
             this.hourGlass = new HourGlass(this);
             SetProcessingState(false);
             statusProgress.Visible = true;
-            // this.cancellationTokenSource = new CancellationTokenSource();
-            //lf.Search(sc, toolButtonCumulative.Checked, cancellationTokenSource.Token, config.NumContextLines);
-            // logs[currentTabIndex].Search(sc, toolButtonCumulative.Checked, cancellationTokenSource.Token, config.NumContextLines);
+            this.cancellationTokenSource = new CancellationTokenSource();
+            lf.Search(sc, toolButtonCumulative.Checked, cancellationTokenSource.Token, config.NumContextLines);
         }
 
         /// <summary>
@@ -281,19 +274,19 @@ namespace LogViewer
         {
             UserInterface.DisplayErrorMessageBox(this, message);
 
-            //synchronizationContext.Post(new SendOrPostCallback(o =>
-            //{
-            //    this.Text = "LogViewer";
-            //    statusProgress.Visible = false;
-            //    this.hourGlass.Dispose();
-            //    SetProcessingState(true);
-            //    this.cancellationTokenSource.Dispose();               
-            //    this.processing = false;
+            synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
+                this.Text = "LogViewer";
+                statusProgress.Visible = false;
+                this.hourGlass.Dispose();
+                SetProcessingState(true);
+                this.cancellationTokenSource.Dispose();
+                this.processing = false;
 
-            //    // Lets clear the LogFile state and set the UI correctly
-            //    menuFileClose_Click(this, null);
+                // Lets clear the LogFile state and set the UI correctly
+                menuFileClose_Click(this, null);
 
-            //}), null);        
+            }), null);
         }
 
         /// <summary>
@@ -311,19 +304,19 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        private void LogFile_SearchComplete(TimeSpan duration, long matches, int numTerms, bool cancelled)
+        private void LogFile_SearchComplete(LogFile lf, TimeSpan duration, long matches, int numTerms, bool cancelled)
         {
-            //synchronizationContext.Post(new SendOrPostCallback(o =>
-            //{
-            //    statusProgress.Visible = false;
-            //    listLines0.Refresh();
-            //    this.hourGlass.Dispose();
-            //    SetProcessingState(true);
-            //    this.cancellationTokenSource.Dispose();
-            //    UpdateStatusLabel("Matched " + matches + " lines (Search Terms: " + numTerms + ") # Duration: " + duration, statusLabelSearch);
-            //    this.processing = false;
+            synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
+                statusProgress.Visible = false;
+                lf.List.Refresh();
+                this.hourGlass.Dispose();
+                SetProcessingState(true);
+                this.cancellationTokenSource.Dispose();
+                UpdateStatusLabel("Matched " + matches + " lines (Search Terms: " + numTerms + ") # Duration: " + duration, statusLabelSearch);
+                this.processing = false;
 
-            //}), null);
+            }), null);
         }
 
         /// <summary>
@@ -332,15 +325,15 @@ namespace LogViewer
         /// <param name="val"></param>
         private void LogFile_ExportComplete(LogFile lf, TimeSpan duration, bool val)
         {
-            //synchronizationContext.Post(new SendOrPostCallback(o =>
-            //{
-            //    statusProgress.Visible = false;
-            //    this.hourGlass.Dispose();
-            //    SetProcessingState(true);
-            //    this.cancellationTokenSource.Dispose();
-            //    UpdateStatusLabel("Export complete # Duration: " + duration, statusLabelSearch);
-            //    this.processing = false;               
-            //}), null);
+            synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
+                statusProgress.Visible = false;
+                this.hourGlass.Dispose();
+                SetProcessingState(true);
+                this.cancellationTokenSource.Dispose();
+                UpdateStatusLabel("Export complete # Duration: " + duration, statusLabelSearch);
+                this.processing = false;
+            }), null);
         }
 
         /// <summary>
@@ -350,17 +343,34 @@ namespace LogViewer
         {
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
+                lf.List.SetObjects(lf.Lines);
+
+                // Try and measure the length of the longest line in pixels
+                // This is rough, and tends to be too short, but cannot find
+                // another method to make column wide enough :-)
+                using (var image = new Bitmap(1, 1))
+                {
+                    using (var g = Graphics.FromImage(image))
+                    {
+                        string temp = lf.GetLine(lf.LongestLine.LineNumber);
+                        var result = g.MeasureString(temp, new Font("Consolas", 9, FontStyle.Regular, GraphicsUnit.Pixel));
+                        lf.List.Columns[1].Width = Convert.ToInt32(result.Width + 100);
+                    }
+                }
+
+                lf.List.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
                 statusProgress.Visible = false;
-                this.hourGlass.Dispose();
+               
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
                 UpdateStatusLabel(lf.Lines.Count + " Lines # Duration: " + duration, statusLabelMain);
-                UpdateStatusLabel("", statusLabelSearch);
-                this.processing = false;
+                UpdateStatusLabel("", statusLabelSearch);               
                 menuFileClose.Enabled = true;
                 menuFileOpen.Enabled = true; // Enable the standard file open, since we can now open in an existing tab, since at least one tab exists
                 int index = tabControl.TabPages.IndexOfKey("tabPage" + lf.Guid);
                 tabControl.TabPages[index].Text = lf.FileName;
+                this.hourGlass.Dispose();
+                this.processing = false;
 
             }), null);
         }
@@ -450,7 +460,7 @@ namespace LogViewer
         /// <param name="e"></param>
         private void listLines_ItemActivate(object sender, EventArgs e)
         {
-            var lv = (FastObjectListView)sender; // or 'sender as Button'
+            var lv = (FastObjectListView)sender;
             if (lv.SelectedObjects.Count != 1)
             {
                 return;
@@ -473,21 +483,22 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuFilterClear_Click(object sender, EventArgs e)
         {
-            //// Get the currently selected row
-            //var ll = (LogLine)listLines0.SelectedObject;
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+            // Get the currently selected row
+            var ll = (LogLine)lf.List.SelectedObject;
 
-            //this.listLines0.ModelFilter = null;
-            //this.viewMode = Global.ViewMode.Standard;
+            lf.List.ModelFilter = null;
+            lf.ViewMode = Global.ViewMode.Standard;
 
-            //if (ll != null)
-            //{
-            //    listLines0.EnsureVisible(ll.LineNumber - 1);
-            //    listLines0.SelectedIndex = ll.LineNumber - 1;
-            //    if (listLines0.SelectedItem != null)
-            //    {
-            //        listLines0.FocusedItem = listLines0.SelectedItem;
-            //    }
-            //}
+            if (ll != null)
+            {
+                lf.List.EnsureVisible(ll.LineNumber - 1);
+                lf.List.SelectedIndex = ll.LineNumber - 1;
+                if (lf.List.SelectedItem != null)
+                {
+                    lf.List.FocusedItem = lf.List.SelectedItem;
+                }
+            }
         }
 
         /// <summary>
@@ -839,7 +850,25 @@ namespace LogViewer
         /// <param name="e"></param>
         private void menuFileClose_Click(object sender, EventArgs e)
         {
-            //this.Text = "LogViewer";
+            if (tabControl.SelectedTab == null || tabControl.SelectedIndex == -1)
+            {
+                return;
+            }
+
+            var tag = tabControl.SelectedTab.Tag.ToString();
+
+            // Get rid of the event handlers to prevent a memory leak
+            logs[tag].ProgressUpdate -= LogFile_LoadProgress;
+            logs[tag].LoadComplete -= LogFile_LoadComplete;
+            logs[tag].SearchComplete -= LogFile_SearchComplete;
+            logs[tag].ExportComplete -= LogFile_ExportComplete;
+            logs[tag].LoadError -= LogFile_LoadError;
+            // Clear the rest
+            logs[tag].List.ClearObjects();
+            logs[tag].Dispose();
+            logs.Remove(tag);
+
+            tabControl.TabPages.Remove(tabControl.SelectedTab);
 
             //// Clear any existing filters/reset values
             //this.listLines0.ModelFilter = null;
@@ -847,21 +876,14 @@ namespace LogViewer
             //this.searches = new Searches();
             //this.filterIds.Clear();
 
-            //if (lf != null)
-            //{
-            //    listLines0.ClearObjects();
-            //    lf.ProgressUpdate -= LogFile_LoadProgress;
-            //    lf.LoadComplete -= LogFile_LoadComplete;
-            //    lf.SearchComplete -= LogFile_SearchComplete;
-            //    lf.ExportComplete -= LogFile_ExportComplete;
-            //    lf.LoadError -= LogFile_LoadError;
-            //    lf.Dispose();
-            //    lf = null;
-            //}
+            if (logs.Count == 0)
+            {
+                menuFileOpen.Enabled = false;
+                menuFileClose.Enabled = false;
+            }
 
-            //menuFileClose.Enabled = false;
-            //UpdateStatusLabel("", statusLabelMain);
-            //UpdateStatusLabel("", statusLabelSearch);
+            UpdateStatusLabel("", statusLabelMain);
+            UpdateStatusLabel("", statusLabelSearch);
         }
 
         /// <summary>

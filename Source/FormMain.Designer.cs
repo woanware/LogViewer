@@ -124,38 +124,38 @@
             // 
             this.menuFileOpen.Enabled = false;
             this.menuFileOpen.Name = "menuFileOpen";
-            this.menuFileOpen.Size = new System.Drawing.Size(315, 40);
+            this.menuFileOpen.Size = new System.Drawing.Size(280, 40);
             this.menuFileOpen.Text = "&Open";
             this.menuFileOpen.Click += new System.EventHandler(this.menuFileOpen_Click);
             // 
             // menuFileOpenNewTab
             // 
             this.menuFileOpenNewTab.Name = "menuFileOpenNewTab";
-            this.menuFileOpenNewTab.Size = new System.Drawing.Size(315, 40);
+            this.menuFileOpenNewTab.Size = new System.Drawing.Size(280, 40);
             this.menuFileOpenNewTab.Text = "Open (New Tab)";
             this.menuFileOpenNewTab.Click += new System.EventHandler(this.menuFileOpenNewTab_Click);
             // 
             // menuFileSep1
             // 
             this.menuFileSep1.Name = "menuFileSep1";
-            this.menuFileSep1.Size = new System.Drawing.Size(312, 6);
+            this.menuFileSep1.Size = new System.Drawing.Size(277, 6);
             // 
             // menuFileClose
             // 
             this.menuFileClose.Name = "menuFileClose";
-            this.menuFileClose.Size = new System.Drawing.Size(315, 40);
+            this.menuFileClose.Size = new System.Drawing.Size(280, 40);
             this.menuFileClose.Text = "Close";
             this.menuFileClose.Click += new System.EventHandler(this.menuFileClose_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(312, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(277, 6);
             // 
             // menuFileExit
             // 
             this.menuFileExit.Name = "menuFileExit";
-            this.menuFileExit.Size = new System.Drawing.Size(315, 40);
+            this.menuFileExit.Size = new System.Drawing.Size(280, 40);
             this.menuFileExit.Text = "&Exit";
             this.menuFileExit.Click += new System.EventHandler(this.menuFileExit_Click);
             // 

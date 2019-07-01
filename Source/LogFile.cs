@@ -19,7 +19,7 @@ namespace LogViewer
     internal class LogFile 
     {
         #region Delegates
-        public delegate void SearchCompleteEvent(TimeSpan duration, long matches, int numSearchTerms, bool cancelled);
+        public delegate void SearchCompleteEvent(LogFile lf, TimeSpan duration, long matches, int numSearchTerms, bool cancelled);
         public delegate void CompleteEvent(LogFile lf, TimeSpan duration, bool cancelled);
         public delegate void BoolEvent(bool val);
         public delegate void DefaultEvent();
@@ -194,29 +194,7 @@ namespace LogViewer
                     {
                         DateTime end = DateTime.Now;
 
-                        OnProgressUpdate(100);
-
-                        st.Post(new SendOrPostCallback(o =>
-                        {
-                            this.List.SetObjects(this.Lines);
-
-                            // Try and measure the length of the longest line in pixels
-                            // This is rough, and tends to be too short, but cannot find
-                            // another method to make column wide enough :-)
-                            using (var image = new Bitmap(1, 1))
-                            {
-                                using (var g = Graphics.FromImage(image))
-                                {
-                                    string temp = this.GetLine(this.LongestLine.LineNumber);
-                                    var result = g.MeasureString(temp, new Font("Consolas", 9, FontStyle.Regular, GraphicsUnit.Pixel));
-                                    this.List.Columns[1].Width = Convert.ToInt32(result.Width + 100);
-                                }
-                            }
-
-                            this.List.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);                         
-
-                        }), null);
-
+                        OnProgressUpdate(100);                       
                         OnLoadComplete(end - start, cancelled);
                     }                   
                 }
@@ -816,7 +794,7 @@ namespace LogViewer
             var handler = SearchComplete;
             if (handler != null)
             {
-                handler(duration, matches, numTerms, cancelled);
+                handler(this, duration, matches, numTerms, cancelled);
             }
         }
         #endregion
