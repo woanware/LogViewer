@@ -25,7 +25,6 @@ namespace LogViewer
         private Color contextColour = Color.LightGray;
         private Configuration config;        
         private Dictionary<string, LogFile> logs;
-        private int currentTabIndex = -1;
         #endregion
 
         #region Constructor
@@ -152,8 +151,7 @@ namespace LogViewer
             this.cancellationTokenSource = new CancellationTokenSource();
             menuToolsMultiStringSearch.Enabled = true;
 
-            // Clear any existing filters/reset values
-            //           
+            // Clear any existing filters/reset values  
             this.searches = new Searches();
 
             if (newTab == true)
@@ -193,8 +191,6 @@ namespace LogViewer
                 lf.Dispose();
                 lf.Load(filePath, synchronizationContext, cancellationTokenSource.Token);
             }
-
-            // this.Text = "LogViewer - " + filePath;
         }
 
         /// <summary>
@@ -237,16 +233,18 @@ namespace LogViewer
             this.hourGlass = new HourGlass(this);
             SetProcessingState(false);
             statusProgress.Visible = true;
-            // this.cancellationTokenSource = new CancellationTokenSource();
+            this.cancellationTokenSource = new CancellationTokenSource();
 
-            //if (listLines.ModelFilter == null)
-            //{
-            //    lf.Export(filePath, cancellationTokenSource.Token);
-            //}
-            //else
-            //{
-            //    lf.Export(listLines.FilteredObjects, filePath, cancellationTokenSource.Token);
-            //}            
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+
+            if (lf.List.ModelFilter == null)
+            {
+                lf.Export(filePath, cancellationTokenSource.Token);
+            }
+            else
+            {
+                lf.Export(lf.List.FilteredObjects, filePath, cancellationTokenSource.Token);
+            }
         }
 
         /// <summary>
@@ -259,9 +257,10 @@ namespace LogViewer
             this.hourGlass = new HourGlass(this);
             SetProcessingState(false);
             statusProgress.Visible = true;
-            //  this.cancellationTokenSource = new CancellationTokenSource();
+            this.cancellationTokenSource = new CancellationTokenSource();
 
-            //lf.Export(listLines.SelectedObjects, filePath, cancellationTokenSource.Token);
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+            lf.Export(lf.List.SelectedObjects, filePath, cancellationTokenSource.Token);
         }
         #endregion
 
@@ -581,8 +580,7 @@ namespace LogViewer
 
             this.highlightColour = cd.Color;
 
-            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
-            lf.List.Refresh();
+            logs[tabControl.SelectedTab.Tag.ToString()].List.Refresh();
         }
 
         /// <summary>
@@ -601,8 +599,7 @@ namespace LogViewer
 
             this.contextColour = cd.Color;
 
-            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
-            lf.List.Refresh();
+            logs[tabControl.SelectedTab.Tag.ToString()].List.Refresh();
         }
 
         /// <summary>
@@ -834,16 +831,6 @@ namespace LogViewer
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MenuFileOpenNewTab_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        /// <summary>
         /// Close the resources used for opening and processing the log file
         /// </summary>
         /// <param name="sender"></param>
@@ -869,12 +856,6 @@ namespace LogViewer
             logs.Remove(tag);
 
             tabControl.TabPages.Remove(tabControl.SelectedTab);
-
-            //// Clear any existing filters/reset values
-            //this.listLines0.ModelFilter = null;
-            //this.viewMode = Global.ViewMode.Standard;
-            //this.searches = new Searches();
-            //this.filterIds.Clear();
 
             if (logs.Count == 0)
             {
@@ -977,6 +958,7 @@ namespace LogViewer
             MethodInvoker methodInvoker = delegate
             {
                 menuFileOpen.Enabled = enabled;
+                menuFileOpenNewTab.Enabled = enabled;
                 menuFileExit.Enabled = enabled;
                 toolButtonCumulative.Enabled = enabled;
                 toolButtonSearch.Enabled = enabled;
@@ -998,10 +980,10 @@ namespace LogViewer
         /// <param name="enabled"></param>
         private void UpdateStatusLabel(string text, ToolStripStatusLabel control)
         {
-            //synchronizationContext.Post(new SendOrPostCallback(o =>
-            //{
-            //    control.Text = (string)o;
-            //}), text);
+            synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
+                control.Text = (string)o;
+            }), text);
         }
         #endregion
 
@@ -1013,19 +995,8 @@ namespace LogViewer
         /// <param name="e"></param>
         private void statusProgress_Click(object sender, EventArgs e)
         {
-            //this.cancellationTokenSource.Cancel();          
+            this.cancellationTokenSource.Cancel();          
         }
         #endregion
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            currentTabIndex = tabControl.SelectedIndex;
-        }
-
     }
 }

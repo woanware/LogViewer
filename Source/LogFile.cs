@@ -45,7 +45,6 @@ namespace LogViewer
         public int LineCount { get; private set; } = 0;
         private FileStream fileStream;
         private Mutex readMutex = new Mutex();
-        private string filePath;
         public string FileName { get; private set; }
         public List<ushort> FilterIds { get; private set; }  = new List<ushort>();
         public FastObjectListView List { get; set; }
@@ -68,7 +67,6 @@ namespace LogViewer
         /// <param name="ct"></param>
         public void Load(string filePath, SynchronizationContext st, CancellationToken ct)
         {
-            this.filePath = filePath;
             this.FileName = Path.GetFileName(filePath);
 
             Task.Run(() => {
@@ -208,8 +206,8 @@ namespace LogViewer
         {
             this.Lines.Clear();
             this.LongestLine = new LogLine();
-            this.LineCount = 0;   
-            this.filePath = string.Empty;
+            this.LineCount = 0;
+            this.FileName = String.Empty;
             this.FilterIds = new List<ushort>();
             this.List.ModelFilter = null;
             this.FilterIds.Clear();
