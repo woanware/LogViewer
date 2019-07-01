@@ -35,10 +35,12 @@ namespace LogViewer
         public event MessageEvent LoadError;
         #endregion
 
-        private Color highlightColour = Color.Lime;
-        private Color contextColour = Color.LightGray;
+
 
         #region Member Variables
+        private Color highlightColour { get; set; }  = Color.Lime;
+        private Color contextColour { get; set; }  = Color.LightGray;
+        public Searches Searches { get; set; }
         public Global.ViewMode ViewMode { get; set; }  = Global.ViewMode.Standard;
         public List<LogLine> Lines { get; private set; } = new List<LogLine>();
         public LogLine LongestLine { get; private set; } = new LogLine();
@@ -57,6 +59,7 @@ namespace LogViewer
         public LogFile()
         {           
             this.Guid = System.Guid.NewGuid().ToString();
+            this.Searches = new Searches();
         }
 
         #region Public Methods
@@ -67,6 +70,7 @@ namespace LogViewer
         /// <param name="ct"></param>
         public void Load(string filePath, SynchronizationContext st, CancellationToken ct)
         {
+            this.Dispose();
             this.FileName = Path.GetFileName(filePath);
 
             Task.Run(() => {
@@ -204,6 +208,7 @@ namespace LogViewer
         /// </summary>
         public void Dispose()
         {
+            this.Searches = new Searches();
             this.Lines.Clear();
             this.LongestLine = new LogLine();
             this.LineCount = 0;
@@ -524,7 +529,7 @@ namespace LogViewer
             tp.Padding = new System.Windows.Forms.Padding(3);
             tp.Size = new System.Drawing.Size(1685, 946);
             tp.TabIndex = 0;
-            tp.Text = "";
+            tp.Text = "Loading...";
             tp.UseVisualStyleBackColor = true;
             tp.Tag = this.Guid;          
 

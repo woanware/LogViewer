@@ -17,8 +17,7 @@ namespace LogViewer
     {
         #region Member Variables
         private readonly SynchronizationContext synchronizationContext;
-        private CancellationTokenSource cancellationTokenSource;
-        private Searches searches;
+        private CancellationTokenSource cancellationTokenSource;        
         private HourGlass hourGlass;
         private bool processing;
         private Color highlightColour = Color.Lime;
@@ -38,7 +37,7 @@ namespace LogViewer
             synchronizationContext = SynchronizationContext.Current;
             dropdownSearchType.SelectedIndex = 0;
             logs = new Dictionary<string, LogFile>();
-            searches = new Searches();
+            
         }
         #endregion
 
@@ -151,9 +150,6 @@ namespace LogViewer
             this.cancellationTokenSource = new CancellationTokenSource();
             menuToolsMultiStringSearch.Enabled = true;
 
-            // Clear any existing filters/reset values  
-            this.searches = new Searches();
-
             if (newTab == true)
             {
                 LogFile lf = new LogFile();
@@ -199,18 +195,18 @@ namespace LogViewer
         /// <returns></returns>
         private void SearchFile()
         {
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+
             SearchCriteria sc = new SearchCriteria();
             sc.Type = (Global.SearchType)dropdownSearchType.SelectedIndex;
             sc.Pattern = textSearch.Text;
-            sc.Id = searches.Add(sc, toolButtonCumulative.Checked);
+            sc.Id = lf.Searches.Add(sc, toolButtonCumulative.Checked);
 
             if (sc.Id == 0)
             {
                 UserInterface.DisplayMessageBox(this, "The search pattern already exists", MessageBoxIcon.Exclamation);
                 return;
-            }
-
-            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+            }           
 
             // Add the ID so that any matches show up straight away
             lf.FilterIds.Add(sc.Id);
@@ -538,7 +534,9 @@ namespace LogViewer
         /// <param name="e"></param>
         private void contextMenuSearchViewTerms_Click(object sender, EventArgs e)
         {
-            using (FormSearchTerms f = new FormSearchTerms(this.searches))
+            LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+
+            using (FormSearchTerms f = new FormSearchTerms(lf.Searches))
             {
                 DialogResult dr = f.ShowDialog(this);
                 if (dr == DialogResult.Cancel)
@@ -546,11 +544,9 @@ namespace LogViewer
                     return;
                 }
 
-                this.searches = f.Searches;
-
-                LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+                lf.Searches = f.Searches;
                 lf.FilterIds.Clear();
-                foreach (SearchCriteria sc in searches.Items)
+                foreach (SearchCriteria sc in lf.Searches.Items)
                 {
                     if (sc.Enabled == false)
                     {
@@ -959,6 +955,7 @@ namespace LogViewer
             {
                 menuFileOpen.Enabled = enabled;
                 menuFileOpenNewTab.Enabled = enabled;
+                menuFileClose.Enabled = enabled;
                 menuFileExit.Enabled = enabled;
                 toolButtonCumulative.Enabled = enabled;
                 toolButtonSearch.Enabled = enabled;
