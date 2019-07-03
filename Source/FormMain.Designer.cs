@@ -49,8 +49,6 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.statusLabelMain = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusSep1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusLabelSearch = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolLabelSearch = new System.Windows.Forms.ToolStripLabel();
             this.textSearch = new System.Windows.Forms.ToolStripTextBox();
@@ -223,9 +221,7 @@
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusProgress,
-            this.statusLabelMain,
-            this.statusSep1,
-            this.statusLabelSearch});
+            this.statusLabelMain});
             this.statusStrip.Location = new System.Drawing.Point(0, 1061);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 17, 0);
@@ -244,18 +240,6 @@
             // 
             this.statusLabelMain.Name = "statusLabelMain";
             this.statusLabelMain.Size = new System.Drawing.Size(0, 13);
-            // 
-            // statusSep1
-            // 
-            this.statusSep1.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
-            this.statusSep1.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.statusSep1.Name = "statusSep1";
-            this.statusSep1.Size = new System.Drawing.Size(4, 13);
-            // 
-            // statusLabelSearch
-            // 
-            this.statusLabelSearch.Name = "statusLabelSearch";
-            this.statusLabelSearch.Size = new System.Drawing.Size(0, 13);
             // 
             // toolStrip
             // 
@@ -347,6 +331,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
+            this.tabControl.ShowToolTips = true;
             this.tabControl.Size = new System.Drawing.Size(1693, 983);
             this.tabControl.TabIndex = 1;
             // 
@@ -581,7 +566,6 @@
         private System.Windows.Forms.ToolStripSeparator menuFileSep1;
         private System.Windows.Forms.ToolStripMenuItem menuFileExit;
         private System.Windows.Forms.ToolStripProgressBar statusProgress;
-        private System.Windows.Forms.ToolStripStatusLabel statusSep1;
         private System.Windows.Forms.ToolStripSeparator menuHelpSep1;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripComboBox dropdownSearchType;
@@ -597,7 +581,6 @@
         private System.Windows.Forms.ToolStripMenuItem contextMenuSearch;
         private System.Windows.Forms.ToolStripSeparator contextMenuSep2;
         private System.Windows.Forms.ToolStripMenuItem contextMenuExport;
-        private System.Windows.Forms.ToolStripStatusLabel statusLabelSearch;
         private System.Windows.Forms.ToolStripSeparator contextMenuSep3;
         private System.Windows.Forms.ToolStripMenuItem contextMenuCopy;
         private System.Windows.Forms.ToolStripMenuItem contextMenuSearchViewTerms;

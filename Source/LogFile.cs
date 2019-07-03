@@ -19,11 +19,10 @@ namespace LogViewer
     internal class LogFile 
     {
         #region Delegates
-        public delegate void SearchCompleteEvent(LogFile lf, TimeSpan duration, long matches, int numSearchTerms, bool cancelled);
-        public delegate void CompleteEvent(LogFile lf, TimeSpan duration, bool cancelled);
-        public delegate void BoolEvent(bool val);
-        public delegate void DefaultEvent();
-        public delegate void MessageEvent(string message);
+        public delegate void SearchCompleteEvent(LogFile lf, string fileName, TimeSpan duration, long matches, int numSearchTerms, bool cancelled);
+        public delegate void CompleteEvent(LogFile lf, string fileName, TimeSpan duration, bool cancelled);
+        public delegate void BoolEvent(string fileName, bool val);
+        public delegate void MessageEvent(string fileName, string message);
         public delegate void ProgressUpdateEvent(int percent);
         #endregion
 
@@ -452,7 +451,7 @@ namespace LogViewer
         }
         #endregion
 
-        public TabPage Initialise()
+        public TabPage Initialise(string filePath)
         {
             OLVColumn colLineNumber = ((OLVColumn)(new OLVColumn()));
             OLVColumn colText = ((OLVColumn)(new OLVColumn()));
@@ -531,7 +530,8 @@ namespace LogViewer
             tp.TabIndex = 0;
             tp.Text = "Loading...";
             tp.UseVisualStyleBackColor = true;
-            tp.Tag = this.Guid;          
+            tp.Tag = this.Guid;
+            tp.ToolTipText = filePath;
 
             return tp;
         }
@@ -715,42 +715,13 @@ namespace LogViewer
             return Regex.Replace(Encoding.ASCII.GetString(buffer), "[\0-\b\n\v\f\x000E-\x001F\x007F-ÿ]", "", RegexOptions.Compiled);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="lineNumber"></param>
-        /// <returns></returns>
-        //public byte[] GetLineBytes(int lineNumber)
-        //{
-        //    if (lineNumber >= this.Lines.Count)
-        //    {
-        //        return new byte[]{};
-        //    }
-
-        //    byte[] buffer = new byte[this.Lines[lineNumber].CharCount + 1];
-        //    try
-        //    {
-        //        this.readMutex.WaitOne();
-        //        this.fileStream.Seek(this.Lines[lineNumber].Offset, SeekOrigin.Begin);
-        //        this.fileStream.Read(buffer, 0, this.Lines[lineNumber].CharCount);
-        //        this.readMutex.ReleaseMutex();
-        //    }
-        //    catch (Exception) { }
-
-        //    return buffer;
-        //}
-
         #region Event Methods
         /// <summary>
         /// 
         /// </summary>
         private void OnLoadError(string message)
         {
-            var handler = LoadError;
-            if (handler != null)
-            {
-                handler(message);
-            }
+            LoadError?.Invoke(this.FileName, message);
         }
 
         /// <summary>
@@ -758,11 +729,7 @@ namespace LogViewer
         /// </summary>
         private void OnProgressUpdate(int progress)
         {
-            var handler = ProgressUpdate;
-            if (handler != null)
-            {
-                handler(progress);
-            }
+            ProgressUpdate?.Invoke(progress);
         }
 
         /// <summary>
@@ -770,11 +737,7 @@ namespace LogViewer
         /// </summary>
         private void OnLoadComplete(TimeSpan duration, bool cancelled)
         {
-            var handler = LoadComplete;
-            if (handler != null)
-            {
-                handler(this, duration, cancelled);
-            }
+            LoadComplete?.Invoke(this, this.FileName, duration, cancelled);
         }
 
         /// <summary>
@@ -782,11 +745,7 @@ namespace LogViewer
         /// </summary>
         private void OnExportComplete(TimeSpan duration, bool cancelled)
         {
-            var handler = ExportComplete;
-            if (handler != null)
-            {
-                handler(this, duration, cancelled);
-            }
+            ExportComplete?.Invoke(this, this.FileName, duration, cancelled);
         }
 
         /// <summary>
@@ -794,11 +753,7 @@ namespace LogViewer
         /// </summary>
         private void OnSearchComplete(TimeSpan duration, long matches, int numTerms, bool cancelled)
         {
-            var handler = SearchComplete;
-            if (handler != null)
-            {
-                handler(this, duration, matches, numTerms, cancelled);
-            }
+            SearchComplete?.Invoke(this, this.FileName, duration, matches, numTerms, cancelled);
         }
         #endregion
     }

@@ -155,7 +155,7 @@ namespace LogViewer
                 LogFile lf = new LogFile();
                 logs.Add(lf.Guid, lf);
 
-                tabControl.TabPages.Add(lf.Initialise());
+                tabControl.TabPages.Add(lf.Initialise(filePath));
                 lf.SetContextMenu(contextMenu);
                 lf.ViewMode = Global.ViewMode.Standard;
                 lf.ProgressUpdate += LogFile_LoadProgress;
@@ -184,6 +184,7 @@ namespace LogViewer
 
                 // Get the current selected log file and open the file using that object
                 LogFile lf = logs[tabControl.SelectedTab.Tag.ToString()];
+                tabControl.SelectedTab.ToolTipText = filePath;
                 lf.Dispose();
                 lf.Load(filePath, synchronizationContext, cancellationTokenSource.Token);
             }
@@ -265,13 +266,12 @@ namespace LogViewer
         /// 
         /// </summary>
         /// <param name="message"></param>
-        private void LogFile_LoadError(string message)
+        private void LogFile_LoadError(string fileName, string message)
         {
-            UserInterface.DisplayErrorMessageBox(this, message);
+            UserInterface.DisplayErrorMessageBox(this, message + " (" + fileName + ")");
 
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
-                this.Text = "LogViewer";
                 statusProgress.Visible = false;
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
@@ -299,7 +299,7 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        private void LogFile_SearchComplete(LogFile lf, TimeSpan duration, long matches, int numTerms, bool cancelled)
+        private void LogFile_SearchComplete(LogFile lf, string fileName, TimeSpan duration, long matches, int numTerms, bool cancelled)
         {
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
@@ -308,7 +308,8 @@ namespace LogViewer
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
-                UpdateStatusLabel("Matched " + matches + " lines (Search Terms: " + numTerms + ") # Duration: " + duration, statusLabelSearch);
+                UpdateStatusLabel("Matched " + matches + " lines (Search Terms: " + numTerms + ") # Duration: " + duration + " (" + fileName + ")", statusLabelMain);
+
                 this.processing = false;
 
             }), null);
@@ -318,7 +319,7 @@ namespace LogViewer
         /// 
         /// </summary>
         /// <param name="val"></param>
-        private void LogFile_ExportComplete(LogFile lf, TimeSpan duration, bool val)
+        private void LogFile_ExportComplete(LogFile lf, string fileName, TimeSpan duration, bool val)
         {
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
@@ -326,7 +327,7 @@ namespace LogViewer
                 this.hourGlass.Dispose();
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
-                UpdateStatusLabel("Export complete # Duration: " + duration, statusLabelSearch);
+                UpdateStatusLabel("Export complete # Duration: " + duration + " (" + fileName + ")", statusLabelMain);
                 this.processing = false;
             }), null);
         }
@@ -334,7 +335,7 @@ namespace LogViewer
         /// <summary>
         /// 
         /// </summary>
-        private void LogFile_LoadComplete(LogFile lf, TimeSpan duration, bool cancelled)
+        private void LogFile_LoadComplete(LogFile lf, string fileName, TimeSpan duration, bool cancelled)
         {
             synchronizationContext.Post(new SendOrPostCallback(o =>
             {
@@ -358,8 +359,7 @@ namespace LogViewer
                
                 SetProcessingState(true);
                 this.cancellationTokenSource.Dispose();
-                UpdateStatusLabel(lf.Lines.Count + " Lines # Duration: " + duration, statusLabelMain);
-                UpdateStatusLabel("", statusLabelSearch);               
+                UpdateStatusLabel(lf.Lines.Count + " Lines # Duration: " + duration + " (" + fileName + ")", statusLabelMain);             
                 menuFileClose.Enabled = true;
                 menuFileOpen.Enabled = true; // Enable the standard file open, since we can now open in an existing tab, since at least one tab exists
                 int index = tabControl.TabPages.IndexOfKey("tabPage" + lf.Guid);
@@ -860,7 +860,6 @@ namespace LogViewer
             }
 
             UpdateStatusLabel("", statusLabelMain);
-            UpdateStatusLabel("", statusLabelSearch);
         }
 
         /// <summary>
